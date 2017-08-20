@@ -1,0 +1,20 @@
+---
+title: "GIS with R"
+subtitle: "💡 <br/> how to start?"
+author: "Jakub Nowosad"
+date: "GIS Learning Community, Cincinnati, 2017-11-01"
+output:
+  xaringan::moon_reader:
+          css: ["default"]
+          lib_dir: libs
+          nature:
+                  highlightStyle: github
+                  highlightLines: true
+                  countIncrementalSlides: false
+                  
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo=FALSE, fig.align='center', warning = FALSE, message = FALSE)
+```
