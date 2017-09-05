@@ -1,6 +1,6 @@
 ---
-title: "GIS with R"
-subtitle: "💡 <br/> how to start?"
+title: "`r emojifont::emoji('world_map')`"
+subtitle: "GIS with R <br/> how to start?"
 author: "Jakub Nowosad"
 date: "GIS Learning Community, Cincinnati, 2017-11-01"
 output:
