@@ -19,7 +19,6 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning = FALSE, message = FALSE)
 ```
 
----
 # Part I - Examples
 
 - Static visualization (1-2)
@@ -254,7 +253,7 @@ plot(wrld[0])
 plot(wrld["pop"])
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+```{r, eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 png('figs/plot_compare.png', width = 800, height = 300)
 par(mfrow = c(1, 2), mar=c(0,0,1,0))
 plot(wrld[0]);plot(wrld["pop"])
@@ -378,21 +377,21 @@ values_dem[1:50]
 
 .pull-left[
 ```{r}
-new_dem3 <- dem + 50
+new_dem <- dem + 50
 ```
 
 ```{r, fig.align='center', fig.height=5, echo=FALSE}
-plot(new_dem3)
+plot(new_dem)
 ```
 ]
 
 .pull-right[
 ```{r}
-new_dem4 <- dem * new_dem
+new_dem2 <- dem * new_dem
 ```
 
 ```{r, fig.align='center', fig.height=5, echo=FALSE}
-plot(new_dem4)
+plot(new_dem2)
 ```
 ]
 
@@ -400,7 +399,7 @@ plot(new_dem4)
 ## CRS 
 
 ```{r}
-crs(dem_set3410)
+crs(dem)
 ```
 
 ---
@@ -527,6 +526,11 @@ leaflet(ham_sp) %>%
 ```{r, echo=FALSE, message=FALSE}
 library(widgetframe)
 library('leaflet')
+l <- leaflet(ham_sp) %>%
+        addProviderTiles(providers$Stamen.Watercolor) %>% 
+        # addTiles() %>%
+        addPolygons() %>% 
+        addMarkers(data=ham_cities_sp, popup=~as.character(name))
 frameWidget(l, height = '400')
 ```
 
