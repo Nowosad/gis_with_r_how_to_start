@@ -25,11 +25,13 @@ knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning = FALSE, messa
 - RasterVis spatiotemporal
 - Animation
 - Interactive visualization
+- https://hafen.github.io/geofacet/
 - Shiny
 - Combining data from different sources (merge raster + reprojection)
 - Interpolation
 - Raster calculations
 - Stats
+
 
 ---
 # Part II - An intro to R
