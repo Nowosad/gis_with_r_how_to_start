@@ -5,7 +5,6 @@ author: "Jakub Nowosad"
 date: "GIS Learning Community, Cincinnati, 2017-11-01"
 output:
   xaringan::moon_reader:
-          css: ["default"]
           lib_dir: libs
           nature:
                   highlightStyle: github
@@ -13,14 +12,15 @@ output:
                   countIncrementalSlides: false
                   
 ---
-
+class: inverse, center, middle
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(fig.align = 'center', warning = FALSE, message = FALSE)
 ```
 
 # Part I - Examples
 
+---
 - Static visualization (1-2)
 - RasterVis spatiotemporal
 - Animation
@@ -31,7 +31,6 @@ knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning = FALSE, messa
 - Interpolation
 - Raster calculations
 - Stats
-
 
 ---
 # Part II - An intro to R
@@ -92,7 +91,9 @@ Most of the functions in this package starts with prefix `st_`.
 ```{r, eval=FALSE}
 devtools::install_github('edzer/sfr') # development version
 ```
+
 or
+
 ```{r, eval=FALSE}
 install.packages('sf') # stable version
 ```
@@ -448,7 +449,7 @@ ham_cities_sf
 ---
 ## Crop
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, cache=TRUE}
 library('tigris')
 oh <- counties(state='OH')
 ham0 <- oh %>% 
