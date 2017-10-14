@@ -5,6 +5,7 @@ author: "Jakub Nowosad"
 date: "GIS Learning Community, Cincinnati, 2017-11-01"
 output:
   xaringan::moon_reader:
+          css: ["default", "style.css"]
           lib_dir: libs
           nature:
                   highlightStyle: github
