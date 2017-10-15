@@ -1,6 +1,6 @@
 ---
-title: "`r emojifont::emoji('world_map')`"
-subtitle: "GIS with R <br/> how to start?"
+title: "GIS with R <br/> how to start?"
+subtitle: "`r emojifont::emoji('world_map')`"
 author: "Jakub Nowosad"
 date: "GIS Learning Community, Cincinnati, 2017-11-01"
 output:
@@ -578,11 +578,24 @@ We encourage contributions on any part of the book, including:
 
 - Improvements to the text, e.g. clarifying unclear sentences, fixing typos (see guidance from [Yihui Xie](https://yihui.name/en/2013/06/fix-typo-in-documentation/))
 - Changes to the code, e.g. to do things in a more efficient way
-- Suggestions on content (see the project"s [issue tracker](https://github.com/Robinlovelace/geocompr/issues) and the [work-in-progress](https://github.com/Robinlovelace/geocompr/tree/master/work-in-progress) folder for chapters in the pipeline)
+- Suggestions on content (see the projects [issue tracker](https://github.com/Robinlovelace/geocompr/issues) and the [work-in-progress](https://github.com/Robinlovelace/geocompr/tree/master/work-in-progress) folder for chapters in the pipeline)
 
-Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/our_style.md) for the book"s style.
+Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/our_style.md) for the books style.
 
 ---
 ### References
 
-Lovelace, R., Nowosad, J., Meunchow, J., 2018. Geocomputation with R. CRC Press.
+- Lovelace Robin, Nowosad Jakub, Meunchow Jannes. 2018. Geocomputation with R. CRC Press.
+- Pebesma, Edzer. 2017. Sf: Simple Features for R. https://github.com/r-spatial/sf/.
+- Pebesma, Edzer, and Roger Bivand. 2017. Sp: Classes and Methods for Spatial Data. https://CRAN.R-project.org/package=sp.
+- Hijmans, Robert J.. 2016b. Raster: Geographic Data Analysis and Modeling. https://CRAN.R-project.org/package=raster.
+
+---
+### References
+
+- H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+- Oscar Perpinan Lamigueiro and Robert Hijmans (2016), rasterVis. R package version 0.41. 
+- Tennekes, Martijn. 2017. Tmap: Thematic Maps. https://CRAN.R-project.org/package=tmap.
+- Cheng, Joe, Bhaskar Karambelkar, and Yihui Xie. 2017. Leaflet: Create Interactive Web Maps with the JavaScript ’Leaflet’ Library. https://CRAN.R-project.org/package=leaflet.
+- Appelhans, Tim, Florian Detsch, Christoph Reudenbach, and Stefan Woellauer. 2017. Mapview: Interactive Viewing of Spatial Objects in R. https://CRAN.R-project.org/package=mapview.
+-  Hadley Wickham, Romain Francois, Lionel Henry and Kirill Müller (2017). dplyr: A Grammar of Data Manipulation. R package version 0.7.4. https://CRAN.R-project.org/package=dplyr
