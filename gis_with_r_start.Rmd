@@ -25,35 +25,96 @@ knitr::opts_chunk$set(fig.align = "center", warning = FALSE, message = FALSE)
 ---
 ### Static visualization
 
+```{r, eval = FALSE}
+library(tidyverse)
+library(sf)
+library(spData)
+
+world = st_read(system.file("shapes/world.gpkg", package = "spData"))
+world_globe <- sf::st_transform(world,
+        "+proj=laea +y_0=0 +lon_0=20 +lat_0=0 +ellps=WGS84 +no_defs")
+
+
+p1 = ggplot(world_globe) +
+        geom_sf(data = world_globe, aes(fill = lifeExp))  +
+        coord_sf(crs = st_crs(world_globe)) +
+        # scale_fill_manual(values = redcol9w_vec, labels = redcol9w$main_name) +
+        # theme_void() + 
+        # guides(fill = FALSE) +
+        labs(fill = "Life expactancy: ")
+p1
+# ggsave(p1, file="figs/09_world_clas9.png", width = 100, height = 55, units = "mm")
+# system(sprintf("mogrify -trim %s", "figs/09_world_clas9.png"))
+```
+
 ---
 ### Static visualization
-ttps://hafen.github.io/geofacet/
+https://hafen.github.io/geofacet/
+
+```{r, eval=FALSE}
+library(geofacet)
+data("state_unemp", package = "geofacet")
+ggplot(state_unemp, aes(year, rate)) +
+        geom_line() +
+        facet_geo(~ state, grid = "us_state_grid2", label = "name") +
+        scale_x_continuous(labels = function(x) paste0("'", substr(x, 3, 4))) +
+        labs(title = "Seasonally Adjusted US Unemployment Rate 2000-2016",
+             caption = "Data Source: bls.gov",
+             x = "Year",
+             y = "Unemployment Rate (%)") +
+        theme(strip.text.x = element_text(size = 6)) + 
+        theme_bw()
+```
 
 ---
 ### Spatiotemporal visualization
 <!-- RasterVis spatiotemporal -->
 
+```{r}
+
+```
+
 ---
 ### Animation
 
+```{r, eval=FALSE}
+library("gapminder")
+library("tidyverse")
+library("sf")
+library("tmap")
+head(gapminder)
+
+europe_area = st_polygon(list(rbind(c(-13, 34), c(-13, 72),
+                                    c(43, 72), c(43, 34), c(-13, 34)))) %>% 
+        st_sfc() %>% 
+        st_set_crs(st_crs(world))
+
+europe = st_intersection(world, europe_area) %>% 
+        left_join(gapminder, by = c("name_long" = "country"))
+
+m1 = tm_shape(europe) + 
+  tm_polygons("gdpPercap.y") +
+  tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE)
+
+animation_tmap(m1, filename = "tmp.gif", width = 2000, height = 600, delay = 40)
+
+```
+
 ---
 ### Interactive visualization
+<!-- mapview or tmap -->
 
 ---
 ### Interactive app
 <!-- Shiny -->
 
 ---
-### Combining data from different sources (merge raster + reprojection)
+### Raster calculations
+<!-- two bands from two areas -> merge -> crop/mask to polygon -> calculate ndvi -->
 
 ---
 ### Interpolation
-
----
-### Raster calculations
-
----
-### Stats
+points of ndvi -> a little bit of geostat -> compare to the previous map -> plots
 
 ---
 class: center, middle
@@ -480,6 +541,10 @@ plot(dem_mask)
 ]
 
 ---
+### Spatial data packages
+
+
+---
 ### Basic maps
 
 - Basic maps of `sf` object can be quickly created using the `plot()` function:
@@ -594,6 +659,7 @@ Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/
 ### References
 
 - H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+- Ryan Hafen (2017). geofacet: 'ggplot2' Faceting Utilities for Geographical Data. R package version 0.1.5. https://CRAN.R-project.org/package=geofacet
 - Oscar Perpinan Lamigueiro and Robert Hijmans (2016), rasterVis. R package version 0.41. 
 - Tennekes, Martijn. 2017. Tmap: Thematic Maps. https://CRAN.R-project.org/package=tmap.
 - Cheng, Joe, Bhaskar Karambelkar, and Yihui Xie. 2017. Leaflet: Create Interactive Web Maps with the JavaScript ’Leaflet’ Library. https://CRAN.R-project.org/package=leaflet.
