@@ -6,3 +6,37 @@ code {
   /* background: #F5F5F5; /* lighter */
   background: #e7e8e2; /* darker */
 } 
+
+/* Two-column layout */
+.left-column {
+  color: #777;
+  width: 20%;
+  height: 92%;
+  float: left;
+}
+.left-column h2:last-of-type, .left-column h3:last-child {
+  color: #000;
+}
+.right-column {
+  width: 75%;
+  float: right;
+  padding-top: 1em;
+}
+.pull-left {
+  float: left;
+  width: 47%;
+}
+.pull-right {
+  float: right;
+  width: 47%;
+}
+.pull-right ~ * {
+  clear: both;
+}
+img {
+  max-width: 100%;
+}
+blockquote {
+  border-left: solid 5px lightgray;
+  padding-left: 1em;
+}
