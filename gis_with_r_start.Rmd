@@ -389,6 +389,8 @@ This package has three object classes:
 library("raster")
 ```
 
+<!-- https://rpubs.com/etiennebr/visualraster -->
+
 ---
 ### Reading
 
