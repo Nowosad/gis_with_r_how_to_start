@@ -60,7 +60,7 @@ class: center, middle
 # Part II - An intro to R
 
 ---
-### What"s R
+### Whats R
 
 ---
 ### How to get R
@@ -96,7 +96,7 @@ d = readr::read_csv("data/gis-vs-gds-table.csv")
 knitr::kable(x = d, caption = "Differences in emphasis between the fields of Geographic Information Systems (GIS) and Geographic Data Science (GDS)", format = "html")
 ```
 
-- **sf** and **sp** are the most important R packages to handle vector data; **sf** is a successor of **sp** but it"s still evolving. Moreover, many other R packages depend on the functions and classes for the **sp** package
+- **sf** and **sp** are the most important R packages to handle vector data; **sf** is a successor of **sp** but its still evolving. Moreover, many other R packages depend on the functions and classes for the **sp** package
 - **raster** is an extension of spatial data classes to work with rasters
 - There are many ways to vizualize spatial data in R, such as the **ggplot2**, **rasterVis**, **tmap**, **leaflet**, and **mapview** packages
 - It is easy to connect R with a GIS software - GRASS GIS (**rgrass7**), SAGA (**RSAGA**), QGIS (**RQGIS** and **qgisremote**), and ArcGIS (**arcgisbinding**)
@@ -117,9 +117,9 @@ knitr::kable(x = d, caption = "Differences in emphasis between the fields of Geo
 ### The **sf** package
 
 The **sf** package in an R implementation of [Simple Features](https://en.wikipedia.org/wiki/Simple_Features). This package incorporates:
-- a new spatial data class system in R
-- functions for reading and writing data
-- tools for spatial operations on vectors
+- A new spatial data class system in R
+- Functions for reading and writing data
+- Tools for spatial operations on vectors
 
 Most of the functions in this package starts with prefix `st_`.
 
@@ -273,6 +273,11 @@ dev.off()
 ```
 
 ![](figs/coord_compare.png)
+
+---
+### Spatial operations
+
+<!-- http://robinlovelace.net/geocompr/spatial-data-operations.html#spatial-operations-on-vector-data -->
 
 ---
 ### The **raster** package
@@ -475,9 +480,6 @@ plot(dem_mask)
 ]
 
 ---
-### Simple map
-
----
 ### Basic maps
 
 - Basic maps of `sf` object can be quickly created using the `plot()` function:
@@ -500,7 +502,7 @@ dev.off()
 ![](figs/plot_compare.png)
 
 ---
-### Simple map
+### Basic maps
 
 ```{r, fig.align="center"}
 plot(dem)
