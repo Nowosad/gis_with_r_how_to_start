@@ -424,7 +424,7 @@ The **raster** package consists of method and classes for raster processing. It 
 - Visualize raster data
 - Many more...
 
-Basic **raster** operations are visualized at https://rpubs.com/etiennebr/visualraster.
+Basic **raster** operations are ilustrated at https://rpubs.com/etiennebr/visualraster.
 
 This package has three object classes:
 
