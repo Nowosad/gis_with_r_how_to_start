@@ -20,6 +20,14 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(fig.align = "center", warning = FALSE, message = FALSE)
 ```
 
+<!-- In preparation for the course you should: -->
+
+<!--     Ensure that you have the latest versions of R and RStudio installed on your laptop: https://www.rstudio.com/products/rstudio/download/ -->
+<!--     Brush up on your R skills if you"re not an R user, e.g. with: -->
+<!--         This excellent tutorial that you can work through to get used to the interface: https://www.datacamp.com/courses/free-introduction-to-r -->
+<!--         A more detailed account by Gillespie and Lovelace (2017): https://csgillespie.github.io/efficientR/set-up.html#rstudio -->
+<!--     Take a look at how GitHub works - we"ll be using it for sharing course materials and sharing links and examples during the course, e.g. by reading this page (and following the tutorial if really keen): https://guides.github.com/activities/hello-world/ -->
+
 # Part I - Examples
 
 ---
@@ -126,28 +134,63 @@ class: center, middle
 ---
 ### How to get R
 
+- https://www.r-project.org/
+- http://cran.rstudio.com/bin/linux/
+- http://cran.rstudio.com/bin/windows/base/
+- http://cran.rstudio.com/bin/macosx/
+
+![](figs/R.png)  
+
 ---
 ### Rstudio
+
+- http://www.rstudio.com/ide/download/desktop
+- This is an Integrated Development Environment (IDE) for R
+- RStudio has many useful features, such as text editor, syntax highlighting, suggested code auto-completion, and many more
+
+![](figs/rstudio.png)
 
 ---
 ### How to get help?
 
+```{r, eval=FALSE}
+# if you know a function name
+?mean
+```
+
+```{r, eval=FALSE}
+# if you know what you want to do
+??"anova"
+```
+
+- You can also look for help using the help window or **F1** key
+
+## Online help
+- [stackoverflow.com](http://stackoverflow.com/questions/tagged/r) - R related questions
+- [gis.stackexchange.com](https://gis.stackexchange.com/questions/tagged/r) - GIS and R related questions
+- [twitter](http://twitter.com/) - `#rstats`
+- Web search engines [Rseek](http://www.rseek.org/), [Duckduckgo](http://duckduckgo.com/), [Google](http://google.com/), [Bing](http://bing.com/), etc.
+
 ---
-### Concept of packages (and how to get them)
+### R packages
 
-<!-- In preparation for the course you should: -->
+- A package is a group of functions
+- `install.packages()` can be used to install packages from CRAN:
 
-<!--     Ensure that you have the latest versions of R and RStudio installed on your laptop: https://www.rstudio.com/products/rstudio/download/ -->
-<!--     Brush up on your R skills if you"re not an R user, e.g. with: -->
-<!--         This excellent tutorial that you can work through to get used to the interface: https://www.datacamp.com/courses/free-introduction-to-r -->
-<!--         A more detailed account by Gillespie and Lovelace (2017): https://csgillespie.github.io/efficientR/set-up.html#rstudio -->
-<!--     Take a look at how GitHub works - we"ll be using it for sharing course materials and sharing links and examples during the course, e.g. by reading this page (and following the tutorial if really keen): https://guides.github.com/activities/hello-world/ -->
+```{r, eval=FALSE}
+install.packages('raster')
+```
+
+- To use a package, load it with function `library()`
+- Unlike `install.packages()`, you need to load selected packages everytime you run R!
+
+```{r}
+library('raster')
+```
 
 ---
 class: center, middle
 # Part III - An intro to spatial R
-
-<!-- The course will be based on Chapter 4 of Geocomputation with R of the forthcoming book Geocomputation with R -->
 
 ---
 ### Spatial R 
@@ -219,6 +262,9 @@ ham_cities_sf = st_read("data/hamiltion_cities.csv",
                         options = c("X_POSSIBLE_NAMES=X", "Y_POSSIBLE_NAMES=Y"))
 ```
 
+### Reading spatial data - data packages
+
+
 ---
 ### Writing spatial data
 
@@ -241,17 +287,16 @@ file.remove(c("data/new_wrld.shp", "data/new_wrld.gpkg"))
 ---
 ### **sf** structure
 
-<!-- rewrite -->
-**sf** objects usually have two classes - `sf` and `data.frame`. Two main differences comparing to a regular `data.frame` object are spatial metadata (`geometry type`, `dimension`, `bbox`, `epsg (SRID)`, `proj4string`) and additional column - typically named `geom` or `geometry`.
+The **sf** object is a table (`data.frame`) with an additional geometry column - typically named `geom` or `geometry` and spatial metadata (`geometry type`, `dimension`, `bbox`, `epsg (SRID)`, `proj4string`).
 
-```{r}
-wrld[1:2, 1:3]
+```{r, echo = FALSE}
+wrld[1:5, 1:3]
 ```
 
 ---
 ### Attributes - the **dplyr** package
 
-- It also easy to use the **dplyr** package on `sf` objects:
+- It is easy to use the **dplyr** package on `sf` objects:
 
 ```{r, message=FALSE}
 library("dplyr")
@@ -373,11 +418,13 @@ plot(ham, add = TRUE)
 
 The **raster** package consists of method and classes for raster processing. It allows to:
 
-- read and write raster data
-- perform raster algebra and raster manipulations
-- work on large datasets due to its ability to process data in chunks
-- visualize raster data
-- many more...
+- Read and write raster data
+- Perform raster algebra and raster manipulations
+- Work on large datasets due to its ability to process data in chunks
+- Visualize raster data
+- Many more...
+
+Basic **raster** operations are visualized at https://rpubs.com/etiennebr/visualraster.
 
 This package has three object classes:
 
@@ -388,9 +435,6 @@ This package has three object classes:
 ```{r, message=FALSE}
 library("raster")
 ```
-
-<!-- https://rpubs.com/etiennebr/visualraster -->
-
 ---
 ### Reading
 
@@ -541,10 +585,6 @@ dem_mask <- mask(dem_crop, ham_sp)
 plot(dem_mask)
 ```
 ]
-
----
-### Spatial data packages
-
 
 ---
 ### Basic maps
