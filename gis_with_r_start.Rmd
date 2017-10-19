@@ -129,7 +129,7 @@ class: center, middle
 # Part II - An intro to R
 
 ---
-### Whats R
+### What's R
 
 ---
 ### How to get R
@@ -259,11 +259,10 @@ ham <- st_read("data/hamilton_county.gpkg")
 
 ```{r}
 ham_cities_sf = st_read("data/hamiltion_cities.csv", 
-                        options = c("X_POSSIBLE_NAMES=X", "Y_POSSIBLE_NAMES=Y"))
+                        options = c("X_POSSIBLE_NAMES=X",
+                                    "Y_POSSIBLE_NAMES=Y",
+                                    "KEEP_GEOM_COLUMNS=NO"))
 ```
-
-### Reading spatial data - data packages
-
 
 ---
 ### Writing spatial data
@@ -367,14 +366,17 @@ st_crs(wrld)
 - The `st_transform()` can be used to transform coordinates
 
 ```{r}
-wrld_3410 <- st_transform(wrld, 3410)
-st_crs(wrld_3410)
+wrld_3857 <- st_transform(wrld, 3857)
+st_crs(wrld_3857)
 ```
 
-```{r,echo=FALSE, eval=FALSE}
-png("figs/coord_compare.png", width = 1000, height = 250)
+---
+### CRS and Reprojection
+
+```{r,echo=FALSE, eval=TRUE, include=FALSE}
+png("figs/coord_compare.png", width = 800, height = 500)
 par(mfrow = c(1, 2), mar=c(0,0,0,0))
-plot(wrld_3410[0]);plot(wrld[0])
+plot(wrld[0], main = "WGS 84");plot(wrld_3857[0], main = "Web Mercator")
 dev.off()
 ```
 
@@ -523,14 +525,22 @@ crs(dem)
 ```
 
 ```{r}
-dem3410 <- projectRaster(dem, crs="+proj=cea +lon_0=0 +lat_ts=30 +x_0=0 +y_0=0 +a=6371228 +b=6371228 +units=m +no_defs")
+dem3857 <- projectRaster(dem, 
+                         crs="+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0
+                         +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0
+                         +units=m +no_defs")
 ```
 
-```{r,echo=FALSE, eval=FALSE}
+http://spatialreference.org/
+
+---
+### CRS and Reprojection
+
+```{r,echo=FALSE, eval=TRUE, include=FALSE}
 png("figs/coord_compare_raster.png", width = 800, height = 400)
 par(mfrow = c(1, 2), mar=c(4,4,4,8))
 # par(mfrow = c(1, 2))
-plot(dem);plot(dem3410)
+plot(dem);plot(dem3857)
 dev.off()
 ```
 
@@ -587,6 +597,21 @@ plot(dem_mask)
 ]
 
 ---
+### Reading spatial data - data packages
+
+```{r datapackages, echo=FALSE, results='asis'}
+datapackages = tibble::tribble(~`Package name`, ~Description,
+                               "osmdata", "Download and import of OpenStreetMap data",
+                               "raster", "The getData() function downloads and imports administrative country, SRTM/ASTER elevation, WorldClim data",
+                               "rnaturalearth", "Functions to download Natural Earth vector and raster data, including world country borders",
+                               "tigirs", "Census TIGER/Line shapefiles in R",
+                               "USAboundaries", "Contemporary state, county, and congressional district boundaries for the United States of America, as well as historical boundaries from 1629 to 2000 for states and counties",
+                               "rnoaa", "An interface to many NOAA data sources",
+                               "rWBclimate", "The World Bank climate data")
+knitr::kable(datapackages, format = "html")
+```
+
+---
 ### Basic maps
 
 - Basic maps of `sf` object can be quickly created using the `plot()` function:
@@ -599,7 +624,7 @@ plot(wrld[0])
 plot(wrld["pop"])
 ```
 
-```{r, eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE, results="hide"}
+```{r, eval=TRUE, echo=FALSE, message=FALSE, include=FALSE}
 png("figs/plot_compare.png", width = 800, height = 300)
 par(mfrow = c(1, 2), mar=c(0,0,1,0))
 plot(wrld[0]);plot(wrld["pop"])
