@@ -172,6 +172,10 @@ class: center, middle
 - Web search engines [Rseek](http://www.rseek.org/), [Duckduckgo](http://duckduckgo.com/), [Google](http://google.com/), [Bing](http://bing.com/), etc.
 
 ---
+### How to start with R?
+
+
+---
 ### R packages
 
 - A package is a group of functions
