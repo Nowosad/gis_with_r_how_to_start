@@ -103,40 +103,55 @@ par(opar)
 
 ```
 
-
-
----
-### Spatiotemporal visualization
-<!-- RasterVis spatiotemporal -->
-
-```{r}
-
-```
-
 ---
 ### Animation
+
+# https://github.com/mtennekes/tmap/issues/142
 
 ```{r, eval=FALSE}
 library("gapminder")
 library("tidyverse")
 library("sf")
 library("tmap")
-head(gapminder)
-
+library("spData")
 europe_area = st_polygon(list(rbind(c(-13, 34), c(-13, 72),
                                     c(43, 72), c(43, 34), c(-13, 34)))) %>% 
         st_sfc() %>% 
         st_set_crs(st_crs(world))
 
-europe = st_intersection(world, europe_area) %>% 
-        left_join(gapminder, by = c("name_long" = "country"))
+europe = st_intersection(world, europe_area) 
+europe_gdp = europe %>% 
+        inner_join(gapminder, by = c("name_long" = "country"))
 
 m1 = tm_shape(europe) + 
-  tm_polygons("gdpPercap.y") +
-  tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE)
+        tm_fill("grey") + 
+     tm_shape(europe_gdp) + 
+        tm_fill("gdpPercap.y", title = "GDP per capita: ") +
+        tm_borders() + 
+        tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE) + 
+        tm_legend(text.size = 1,
+                  title.size = 1.2,
+                  position = c("left", "TOP"),
+                  height = 0.3)
 
-animation_tmap(m1, filename = "tmp.gif", width = 2000, height = 600, delay = 40)
+animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 
+## or
+world_gdp = world %>% 
+        left_join(gapminder, by = c("name_long" = "country"))
+
+m1 = tm_shape(world_gdp, bbox = raster::extent(-13, 43, 34, 72)) + 
+        tm_fill("grey") +
+     tm_shape(world_gdp) +
+        tm_fill("gdpPercap.y", title = "GDP per capita: ") +
+        tm_borders() + 
+        tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE, showNA = FALSE) + 
+        tm_legend(text.size = 1,
+                  title.size = 1.2,
+                  position = c("left", "TOP"),
+                  height = 0.3)
+
+animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 ```
 
 ---
@@ -153,7 +168,7 @@ animation_tmap(m1, filename = "tmp.gif", width = 2000, height = 600, delay = 40)
 
 ---
 ### Interpolation
-points of ndvi -> a little bit of geostat -> compare to the previous map -> plots
+<!-- points of ndvi -> a little bit of geostat -> compare to the previous map -> plots -->
 
 ---
 class: center, middle
