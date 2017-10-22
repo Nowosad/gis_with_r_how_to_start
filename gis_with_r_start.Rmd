@@ -8,10 +8,12 @@ output:
           css: ["default", "style.css"]
           lib_dir: libs
           nature:
+                  
                   highlightStyle: github
                   highlightLines: true
                   countIncrementalSlides: false
-                  
+editor_options: 
+  chunk_output_type: console
 ---
 class: center, middle
 
@@ -33,282 +35,54 @@ knitr::opts_chunk$set(fig.align = "center", warning = FALSE, message = FALSE)
 ---
 ### Static visualization
 
-```{r, eval = FALSE}
-library(tidyverse)
-library(sf)
-library(spData)
-
-world = st_read(system.file("shapes/world.gpkg", package = "spData"))
-world_globe <- sf::st_transform(world,
-        "+proj=laea +y_0=0 +lon_0=20 +lat_0=0 +ellps=WGS84 +no_defs")
-
-
-p1 = ggplot(world_globe) +
-        geom_sf(data = world_globe, aes(fill = lifeExp))  +
-        coord_sf(crs = st_crs(world_globe)) +
-        # scale_fill_manual(values = redcol9w_vec, labels = redcol9w$main_name) +
-        # theme_void() + 
-        # guides(fill = FALSE) +
-        labs(fill = "Life expactancy: ")
-p1
-# ggsave(p1, file="figs/09_world_clas9.png", width = 100, height = 55, units = "mm")
-# system(sprintf("mogrify -trim %s", "figs/09_world_clas9.png"))
+```{r, echo = FALSE}
+knitr::include_graphics("figs/01_world_globe.png")
 ```
 
 ---
 ### Static visualization
 https://hafen.github.io/geofacet/
 
-```{r, eval=FALSE}
-library(geofacet)
-data("state_unemp", package = "geofacet")
-ggplot(state_unemp, aes(year, rate)) +
-        geom_line() +
-        facet_geo(~ state, grid = "us_state_grid2", label = "name") +
-        scale_x_continuous(labels = function(x) paste0("'", substr(x, 3, 4))) +
-        labs(title = "Seasonally Adjusted US Unemployment Rate 2000-2016",
-             caption = "Data Source: bls.gov",
-             x = "Year",
-             y = "Unemployment Rate (%)") +
-        theme(strip.text.x = element_text(size = 6)) + 
-        theme_bw()
+
+```{r}
+knitr::include_graphics("figs/02_state_unemp.png")
 ```
 
 ---
-### Static visualization
-https://github.com/rCarto/linemap
+### Static visualization\
 
-```{r, eval = FALSE}
-library(sf)
-library(tidycensus)
-library(linemap)
-
-census_api_key("231364375917673d2913240fd18a6c0c103bc62a")
-oh_pop <- get_acs(geography = "tract", 
-                     variables = "B01003_001E", 
-                     state = "OH",
-                     geometry = TRUE) 
-
-plot(oh_pop$geometry)
-oh_pop
-oh_pop2 = st_transform(oh_pop, 26917)
-
-oh_pop2_grid = getgrid(x = oh_pop2, cellsize = 2500, var = "estimate")
-opar = par(mar = c(0,0,0,0))
-plot(st_geometry(oh_pop2), col="lightblue3", border = NA, bg = "lightblue2")
-linemap(x = oh_pop2_grid, var = "estimate", k = 3, threshold = 1,
-        col = "lightblue3", border = "white", lwd = 0.8,
-        add = TRUE)
-par(opar)
-
+```{r}
+knitr::include_graphics("figs/03_ohio_linemap.png")
 ```
 
 ---
 ### Animation
 
-# https://github.com/mtennekes/tmap/issues/142
-
-```{r, eval=FALSE}
-library("gapminder")
-library("tidyverse")
-library("sf")
-library("tmap")
-library("spData")
-europe_area = st_polygon(list(rbind(c(-13, 34), c(-13, 72),
-                                    c(43, 72), c(43, 34), c(-13, 34)))) %>% 
-        st_sfc() %>% 
-        st_set_crs(st_crs(world))
-
-europe = st_intersection(world, europe_area) 
-europe_gdp = europe %>% 
-        inner_join(gapminder, by = c("name_long" = "country"))
-
-m1 = tm_shape(europe) + 
-        tm_fill("grey") + 
-     tm_shape(europe_gdp) + 
-        tm_fill("gdpPercap.y", title = "GDP per capita: ") +
-        tm_borders() + 
-        tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE) + 
-        tm_legend(text.size = 1,
-                  title.size = 1.2,
-                  position = c("left", "TOP"),
-                  height = 0.3)
-
-animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
-
-## or
-world_gdp = world %>% 
-        left_join(gapminder, by = c("name_long" = "country"))
-
-m1 = tm_shape(world_gdp, bbox = raster::extent(-13, 43, 34, 72)) + 
-        tm_fill("grey") +
-     tm_shape(world_gdp) +
-        tm_fill("gdpPercap.y", title = "GDP per capita: ") +
-        tm_borders() + 
-        tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE, showNA = FALSE) + 
-        tm_legend(text.size = 1,
-                  title.size = 1.2,
-                  position = c("left", "TOP"),
-                  height = 0.3)
-
-animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
+```{r}
+knitr::include_graphics("figs/04_anim.gif")
 ```
 
 ---
 ### Interactive visualization
 
-<!-- https://rstudio.github.io/leaflet/ -->
+<iframe src="05_leaflet.html" height="600" width="700"></iframe> 
 
-```{r, eval=FALSE}
-library(tigris)
-library(leaflet)
-library(sf)
-library(dplyr)
-library(osmdata)
+---
+### Remote sensing calculations
 
-oh <- counties(state="OH")
-hamilton <- oh %>% 
-        st_as_sf(.) %>% 
-        filter(NAME=="Hamilton") %>% 
-        st_transform(4326)
-
-pubs = opq(bbox = "Cincinnati OH") %>% 
-  add_osm_feature(key = "amenity", value = "pub") %>% 
-  osmdata_sf()
-
-leaflet(hamilton) %>%
-        addTiles(group = "OSM") %>%
-        addProviderTiles(providers$Stamen.Watercolor, group = "Watercolor") %>% 
-        addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>% 
-        addLayersControl(    baseGroups = c("OSM", "Watercolor", "Toner Lite")) %>% 
-        addPolygons() %>% 
-        addMarkers(data = pubs$osm_points, popup=~as.character(name))
+```{r, echo=FALSE}
+knitr::include_graphics("figs/06_ndvi.png")
 ```
 
 ---
-### Raster calculations
+### Terrain calculations
 
-```{r, eval=FALSE}
-library(raster)
-download_landsat8 <- function(destination_filename, band){
-        filename <- paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
-        download.file(filename, destination_filename, method='auto')
-        return(destination_filename)
-}
-
-# download_landsat8("data/landsat_b4.tif", band = 4)
-# download_landsat8("data/landsat_b5.tif", band = 5)
-
-b4 = raster("data/landsat_b4.tif")
-b5 = raster("data/landsat_b5.tif")
-
-ndvi_calc = function(b4, b5){
-        ndvi = (b5 - b4)/(b5 + b4)
-        ndvi
-}
-
-my_ndvi = overlay(b4, b5, fun = ndvi_calc)
-plot(my_ndvi)
-
-hist(my_ndvi)
+```{r, echo=FALSE}
+knitr::include_graphics("figs/07_terrain.png")
 ```
-
-<!-- two bands from two areas -> merge -> crop/mask to polygon -> calculate ndvi -->
----
-###
-
-```{r, eval=FALSE}
-library(raster)
-# getData('SRTM', lon = 5, lat = 45, path = "data")
-srtm = raster("data/srtm_38_04.tif")
-my_area = extent(c(8, 10, 41.3, 43.1))
-my_srtm = crop(srtm, my_area)
-
-plot(my_srtm)
-
-library(mapview)
-mapView(my_srtm)
-
-my_terrain = terrain(my_srtm, opt = c("slope", "aspect", "tpi", "tri", "roughness", "flowdir"))
-plot(my_terrain)
-
-library(rasterVis)
-levelplot(my_terrain)
-```
-
-<!-- --- -->
-<!-- ### Interpolation -->
-
-
-<!-- ```{r, eval=FALSE, echo=FALSE} -->
-<!-- library(raster) -->
-<!-- library(sf) -->
-<!-- set.seed(2017-10-22) -->
-<!-- # getData('worldclim', var = 'tmax', res = 0.5, lon = 5, lat = 45, path = "data") -->
-<!-- my_area = extent(c(9, 9.1, 42, 42.05)) -->
-<!-- tmax = raster("data/wc0.5/tmax11_16.bil") %>%  -->
-<!--         crop(my_area) %>%  -->
-<!--         sampleRandom(size = 100, sp = TRUE) %>%  -->
-<!--         st_as_sf() %>%  -->
-<!--         dplyr::mutate(tmax11_16 = tmax11_16/10) %>%  -->
-<!--         st_set_crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") %>%  -->
-<!--         st_write("data/tmax_points.gpkg", layer_options = "OVERWRITE=true") -->
-<!-- ``` -->
-
-
-<!-- ```{r, eval=FALSE, echo=FALSE} -->
-<!-- library(sf) -->
-<!-- library(raster) -->
-<!-- library(gstat) -->
-<!-- tmax = st_read("data/tmax_points.gpkg") -->
-<!-- plot(tmax) -->
-
-<!-- # getData('SRTM', lon = 5, lat = 45, path = "data") -->
-<!-- srtm = raster("data/srtm_38_04.tif") -->
-<!-- my_area = extent(c(9, 9.1, 42, 42.05)) -->
-<!-- my_srtm = crop(srtm, my_area) -->
-
-<!-- tmax_sp = as(tmax, "Spatial") -->
-<!-- my_srtm_sp = as(my_srtm, 'SpatialPointsDataFrame') -->
-
-<!-- g <- gstat(NULL, id='tmax', form = tmax11_16~1, data = tmax_sp) -->
-<!-- g <- gstat(g, id='srtm', form = srtm_38_04~1, data = my_srtm_sp) -->
-<!-- g -->
-
-<!-- v <- variogram(g) -->
-<!-- plot(v) -->
-<!-- ``` -->
-
-
-<!-- points of ndvi -> a little bit of geostat -> compare to the previous map -> plots -->
 
 ---
 ### Geocoding
-
-```{r, eval=FALSE}
-# http://happygitwithr.com/api-tokens.html
-# install.packages("opencage")
-library(opencage)
-library(tidyverse)
-library(sf)
-
-cat("OPENCAGE_KEY=2d83e585202b49a492307f5860dbc9d0\n",
-    file=file.path(normalizePath("~/"), ".Renviron"),
-    append=TRUE)
-Sys.getenv("OPENCAGE_KEY")
-
-my_places = c("New York", "Los Angeles", "Chicago", "Houston", "Philadelphia")
-
-output <- my_places %>%
-        map(opencage_forward, limit = 1) %>% 
-        map_df(1)
-
-output_sf <- st_as_sf(output, coords = c("geometry.lng", "geometry.lat"), crs = 4326)
-plot(output_sf$geometry)
-
-library(mapview)
-mapview(output_sf)
-```
 
 ---
 class: center, middle
@@ -849,7 +623,280 @@ class: center, middle
 # Part IV - Examples
 
 ---
-- Explained code from the start
+### Static visualization
+
+```{r, eval = FALSE}
+library(tidyverse)
+library(sf)
+library(spData)
+
+world = st_read(system.file("shapes/world.gpkg", package = "spData"))
+world_globe <- sf::st_transform(world,
+        "+proj=ortho +x_0=0 +y_0=0 +lon_0=-100 +lat_0=40 +ellps=WGS84 +no_defs")
+
+p1 = ggplot(world_globe) +
+        geom_sf(data = world_globe, aes(fill = lifeExp))  +
+        scale_fill_viridis_c(name = "Life expactancy: ") +
+        theme_void()
+p1
+ggsave(p1, file="figs/01_world_globe.png", 
+       width = 70, height = 60, units = "mm", scale = 2)
+```
+
+---
+### Static visualization
+https://hafen.github.io/geofacet/
+
+```{r, eval=FALSE}
+library(geofacet)
+library(ggplot2)
+data("state_unemp", package = "geofacet")
+p2 = ggplot(state_unemp, aes(year, rate)) +
+        geom_line() +
+        facet_geo(~ state, grid = "us_state_grid2", label = "name") +
+        scale_x_continuous(labels = function(x) paste0("'", substr(x, 3, 4))) +
+        labs(title = "Seasonally Adjusted US Unemployment Rate 2000-2016",
+             caption = "Data Source: bls.gov",
+             x = "Year",
+             y = "Unemployment Rate (%)") +
+        theme(strip.text.x = element_text(size = 2)) + 
+        theme_bw()
+ggsave(p2, file="figs/02_state_unemp.png", 
+       width = 70, height = 60, units = "mm", scale = 4)        
+```
+
+---
+### Static visualization
+https://github.com/rCarto/linemap
+
+```{r, eval = FALSE}
+library(sf)
+library(tidycensus)
+library(linemap)
+# A key can be acquired at http://api.census.gov/data/key_signup.html
+# census_api_key("your key")
+oh_pop <- get_acs(geography = "tract", 
+                     variables = "B01003_001E", 
+                     state = "OH",
+                     geometry = TRUE) 
+
+plot(oh_pop$geometry)
+oh_pop
+oh_pop2 = st_transform(oh_pop, 26917)
+
+oh_pop2_grid = getgrid(x = oh_pop2, cellsize = 2500, var = "estimate")
+
+png("figs/03_ohio_linemap.png", width = 650, height = 600)
+opar = par(mar = c(0,0,0,0))
+plot(st_geometry(oh_pop2), col="lightsteelblue3", border = NA, bg = "lightsteelblue1")
+linemap(x = oh_pop2_grid, var = "estimate", k = 3, threshold = 1,
+        col = "lightsteelblue3", border = "white", lwd = 0.8,
+        add = TRUE)
+par(opar)
+dev.off()
+```
+
+---
+### Animation
+
+https://github.com/mtennekes/tmap/issues/142
+
+```{r, eval=FALSE}
+library("gapminder")
+library("tidyverse")
+library("sf")
+library("tmap")
+library("spData")
+europe_area = st_polygon(list(rbind(c(-13, 34), c(-13, 72),
+                                    c(43, 72), c(43, 34), c(-13, 34)))) %>% 
+        st_sfc() %>% 
+        st_set_crs(st_crs(world))
+
+europe = st_intersection(world, europe_area) 
+europe_gdp = europe %>% 
+        inner_join(gapminder, by = c("name_long" = "country"))
+
+m1 = tm_shape(europe) + 
+        tm_fill("grey") + 
+     tm_shape(europe_gdp) + 
+        tm_fill("gdpPercap.y", title = "GDP per capita: ") +
+        tm_borders() + 
+        tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE) + 
+        tm_legend(text.size = 1,
+                  title.size = 1.2,
+                  position = c("left", "TOP"),
+                  height = 0.3)
+
+animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
+
+## or
+world_gdp = world %>% 
+        left_join(gapminder, by = c("name_long" = "country"))
+
+m1 = tm_shape(world_gdp, bbox = raster::extent(-13, 43, 34, 72)) + 
+        tm_fill("grey") +
+     tm_shape(world_gdp) +
+        tm_fill("gdpPercap.y", title = "GDP per capita: ") +
+        tm_borders() + 
+        tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE, showNA = FALSE) + 
+        tm_legend(text.size = 1,
+                  title.size = 1.2,
+                  position = c("left", "TOP"),
+                  height = 0.3)
+
+animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
+```
+
+---
+### Interactive visualization
+
+<!-- https://rstudio.github.io/leaflet/ -->
+
+```{r, eval=FALSE}
+library(tigris)
+library(leaflet)
+library(sf)
+library(dplyr)
+library(osmdata)
+library(widgetframe)
+
+oh <- counties(state="OH")
+hamilton <- oh %>% 
+        st_as_sf(.) %>% 
+        filter(NAME=="Hamilton") %>% 
+        st_transform(4326)
+
+pubs = opq(bbox = "Cincinnati OH") %>% 
+  add_osm_feature(key = "amenity", value = "pub") %>% 
+  osmdata_sf()
+
+l1 = leaflet(hamilton) %>%
+        addTiles(group = "OSM") %>%
+        addProviderTiles(providers$Stamen.Watercolor, group = "Watercolor") %>% 
+        addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>% 
+        addLayersControl(    baseGroups = c("OSM", "Watercolor", "Toner Lite")) %>% 
+        addPolygons() %>% 
+        addMarkers(data = pubs$osm_points, popup=~as.character(name))
+
+saveWidget(l1, file = "05_leaflet.html", selfcontained = FALSE)
+```
+
+---
+### Raster calculations
+
+```{r, eval=FALSE}
+library(raster)
+download_landsat8 <- function(destination_filename, band){
+        filename <- paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
+        download.file(filename, destination_filename, method='auto')
+        return(destination_filename)
+}
+
+# download_landsat8("data/landsat_b4.tif", band = 4)
+# download_landsat8("data/landsat_b5.tif", band = 5)
+
+b4 = raster("data/landsat_b4.tif")
+b5 = raster("data/landsat_b5.tif")
+
+ndvi_calc = function(b4, b5){
+        ndvi = (b5 - b4)/(b5 + b4)
+        ndvi
+}
+
+my_ndvi = overlay(b4, b5, fun = ndvi_calc)
+
+png("figs/06_ndvi.png", width = 650, height = 500)
+par(mfrow=c(1,2))
+plot(my_ndvi)
+hist(my_ndvi)
+dev.off()
+```
+
+---
+### Terrain calculations
+
+```{r, eval=FALSE}
+library(raster)
+# getData('SRTM', lon = 5, lat = 45, path = "data")
+srtm = raster("data/srtm_38_04.tif")
+my_area = extent(c(8, 10, 41.3, 43.1))
+my_srtm = crop(srtm, my_area)
+
+plot(my_srtm)
+
+library(mapview)
+mapView(my_srtm)
+
+my_terrain = terrain(my_srtm, opt = c("slope", "aspect", "tpi", "tri", "roughness", "flowdir"))
+
+png("figs/07_terrain.png", width = 650, height = 500)
+plot(my_terrain)
+dev.off()
+```
+
+
+<!-- ```{r, eval=FALSE, echo=FALSE} -->
+<!-- library(raster) -->
+<!-- library(sf) -->
+<!-- set.seed(2017-10-22) -->
+<!-- # getData('worldclim', var = 'tmax', res = 0.5, lon = 5, lat = 45, path = "data") -->
+<!-- my_area = extent(c(9, 9.1, 42, 42.05)) -->
+<!-- tmax = raster("data/wc0.5/tmax11_16.bil") %>%  -->
+<!--         crop(my_area) %>%  -->
+<!--         sampleRandom(size = 100, sp = TRUE) %>%  -->
+<!--         st_as_sf() %>%  -->
+<!--         dplyr::mutate(tmax11_16 = tmax11_16/10) %>%  -->
+<!--         st_set_crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") %>%  -->
+<!--         st_write("data/tmax_points.gpkg", layer_options = "OVERWRITE=true") -->
+<!-- ``` -->
+
+
+<!-- ```{r, eval=FALSE, echo=FALSE} -->
+<!-- library(sf) -->
+<!-- library(raster) -->
+<!-- library(gstat) -->
+<!-- tmax = st_read("data/tmax_points.gpkg") -->
+<!-- plot(tmax) -->
+
+<!-- # getData('SRTM', lon = 5, lat = 45, path = "data") -->
+<!-- srtm = raster("data/srtm_38_04.tif") -->
+<!-- my_area = extent(c(9, 9.1, 42, 42.05)) -->
+<!-- my_srtm = crop(srtm, my_area) -->
+
+<!-- tmax_sp = as(tmax, "Spatial") -->
+<!-- my_srtm_sp = as(my_srtm, 'SpatialPointsDataFrame') -->
+
+<!-- g <- gstat(NULL, id='tmax', form = tmax11_16~1, data = tmax_sp) -->
+<!-- g <- gstat(g, id='srtm', form = srtm_38_04~1, data = my_srtm_sp) -->
+<!-- g -->
+
+<!-- v <- variogram(g) -->
+<!-- plot(v) -->
+<!-- ``` -->
+
+---
+### Geocoding
+
+```{r, eval=FALSE}
+# http://happygitwithr.com/api-tokens.html
+library(opencage)
+library(tidyverse)
+library(sf)
+library(mapview)
+library(widgetframe)
+
+my_places = c("New York", "Los Angeles", "Chicago", "Houston", "Philadelphia")
+
+output <- my_places %>%
+        map(opencage_forward, limit = 1) %>% 
+        map_df(1)
+
+output_sf <- st_as_sf(output, coords = c("geometry.lng", "geometry.lat"), crs = 4326)
+plot(output_sf$geometry, axes = TRUE)
+
+m1 = mapview(output_sf)
+saveWidget(m1, file = "08_geocoding.html", selfcontained = FALSE)
+```
 
 ```{r, message=FALSE, eval=FALSE}
 library("tigris")
