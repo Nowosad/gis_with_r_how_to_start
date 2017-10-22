@@ -156,6 +156,16 @@ animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 
 ---
 ### Interactive visualization
+
+```{r}
+library("leaflet")
+leaflet(ham_sp) %>%
+        addProviderTiles(providers$Stamen.Watercolor) %>% 
+        # addTiles() %>%
+        addPolygons() %>% 
+        addMarkers(data=ham_cities_sp, popup=~as.character(name))
+```
+
 <!-- mapview or tmap -->
 
 ---
@@ -164,10 +174,99 @@ animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 
 ---
 ### Raster calculations
-<!-- two bands from two areas -> merge -> crop/mask to polygon -> calculate ndvi -->
 
+```{r}
+library(raster)
+download_landsat8 <- function(destination_filename, band){
+        filename <- paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
+        download.file(filename, destination_filename, method='auto')
+        return(destination_filename)
+}
+
+# download_landsat8("data/landsat_b4.tif", band = 4)
+# download_landsat8("data/landsat_b5.tif", band = 5)
+
+b4 = raster("data/landsat_b4.tif")
+b5 = raster("data/landsat_b5.tif")
+
+ndvi_calc = function(b4, b5){
+        ndvi = (b5 - b4)/(b5 + b4)
+        ndvi
+}
+
+my_ndvi = overlay(b4, b5, fun = ndvi_calc)
+plot(my_ndvi)
+
+hist(my_ndvi)
+```
+
+<!-- two bands from two areas -> merge -> crop/mask to polygon -> calculate ndvi -->
 ---
-### Interpolation
+###
+
+```{r}
+library(raster)
+# getData('SRTM', lon = 5, lat = 45, path = "data")
+srtm = raster("data/srtm_38_04.tif")
+my_area = extent(c(8, 10, 41.3, 43.1))
+my_srtm = crop(srtm, my_area)
+
+plot(my_srtm)
+
+library(mapview)
+mapView(my_srtm)
+
+my_terrain = terrain(my_srtm, opt = c("slope", "aspect", "tpi", "tri", "roughness", "flowdir"))
+plot(my_terrain)
+
+library(rasterVis)
+levelplot(my_terrain)
+```
+
+<!-- --- -->
+<!-- ### Interpolation -->
+
+
+<!-- ```{r, eval=FALSE, echo=FALSE} -->
+<!-- library(raster) -->
+<!-- library(sf) -->
+<!-- set.seed(2017-10-22) -->
+<!-- # getData('worldclim', var = 'tmax', res = 0.5, lon = 5, lat = 45, path = "data") -->
+<!-- my_area = extent(c(9, 9.1, 42, 42.05)) -->
+<!-- tmax = raster("data/wc0.5/tmax11_16.bil") %>%  -->
+<!--         crop(my_area) %>%  -->
+<!--         sampleRandom(size = 100, sp = TRUE) %>%  -->
+<!--         st_as_sf() %>%  -->
+<!--         dplyr::mutate(tmax11_16 = tmax11_16/10) %>%  -->
+<!--         st_set_crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") %>%  -->
+<!--         st_write("data/tmax_points.gpkg", layer_options = "OVERWRITE=true") -->
+<!-- ``` -->
+
+
+<!-- ```{r, eval=FALSE, echo=FALSE} -->
+<!-- library(sf) -->
+<!-- library(raster) -->
+<!-- library(gstat) -->
+<!-- tmax = st_read("data/tmax_points.gpkg") -->
+<!-- plot(tmax) -->
+
+<!-- # getData('SRTM', lon = 5, lat = 45, path = "data") -->
+<!-- srtm = raster("data/srtm_38_04.tif") -->
+<!-- my_area = extent(c(9, 9.1, 42, 42.05)) -->
+<!-- my_srtm = crop(srtm, my_area) -->
+
+<!-- tmax_sp = as(tmax, "Spatial") -->
+<!-- my_srtm_sp = as(my_srtm, 'SpatialPointsDataFrame') -->
+
+<!-- g <- gstat(NULL, id='tmax', form = tmax11_16~1, data = tmax_sp) -->
+<!-- g <- gstat(g, id='srtm', form = srtm_38_04~1, data = my_srtm_sp) -->
+<!-- g -->
+
+<!-- v <- variogram(g) -->
+<!-- plot(v) -->
+<!-- ``` -->
+
+
 <!-- points of ndvi -> a little bit of geostat -> compare to the previous map -> plots -->
 
 ---
