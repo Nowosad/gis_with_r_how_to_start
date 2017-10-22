@@ -75,6 +75,37 @@ ggplot(state_unemp, aes(year, rate)) +
 ```
 
 ---
+### Static visualization
+https://github.com/rCarto/linemap
+
+```{r, eval = FALSE}
+library(sf)
+library(tidycensus)
+library(linemap)
+
+census_api_key("231364375917673d2913240fd18a6c0c103bc62a")
+oh_pop <- get_acs(geography = "tract", 
+                     variables = "B01003_001E", 
+                     state = "OH",
+                     geometry = TRUE) 
+
+plot(oh_pop$geometry)
+oh_pop
+oh_pop2 = st_transform(oh_pop, 26917)
+
+oh_pop2_grid = getgrid(x = oh_pop2, cellsize = 2500, var = "estimate")
+opar = par(mar = c(0,0,0,0))
+plot(st_geometry(oh_pop2), col="lightblue3", border = NA, bg = "lightblue2")
+linemap(x = oh_pop2_grid, var = "estimate", k = 3, threshold = 1,
+        col = "lightblue3", border = "white", lwd = 0.8,
+        add = TRUE)
+par(opar)
+
+```
+
+
+
+---
 ### Spatiotemporal visualization
 <!-- RasterVis spatiotemporal -->
 
@@ -395,34 +426,6 @@ dev.off()
 ---
 ### The **raster** package
 
-```{r, include=FALSE, eval=FALSE}
-library("raster")
-# getData("SRTM", lon=-8, lat=45, path="data")
-# getData("SRTM", lon=-8, lat=40, path="data")
-# dem <- raster("data/srtm_35_04.tif")
-# system.time(plot(dem))
-# system.time(image(dem))
-# system.time(rasterVis::levelplot(dem))
-# getData("SRTM", lon=-85, lat=40, path="data")
-library("tigris")
-library("sf")
-library("tidyverse")
-oh <- counties(state="OH")
-ham <- oh %>% 
-        st_as_sf(.) %>% 
-        filter(NAME=="Hamilton")
-plot(ham[0])
-ham %>% st_write(., "data/hamilton_county.gpkg")
-
-dem <- raster("data/srtm_20_05.tif")
-
-
-dem2 <- crop(dem, extent(-85, -84, 38.8, 39.4))
-writeRaster(dem2, "data/srtm.tif")
-plot(dem2)
-plot(ham, add = TRUE)
-```
-
 The **raster** package consists of method and classes for raster processing. It allows to:
 
 - Read and write raster data
@@ -567,15 +570,6 @@ ham_cities_sf
 ---
 ### Crop
 
-```{r, echo=FALSE, message=FALSE, cache=TRUE}
-library("tigris")
-oh <- counties(state="OH")
-ham0 <- oh %>% 
-        st_as_sf(.) %>% 
-        filter(NAME=="Hamilton")
-ham <- st_transform(ham0, 4326)
-```
-
 ```{r}
 ham84 <- st_transform(ham, 4326)
 ham_sp <- as(ham84, "Spatial")
@@ -702,12 +696,50 @@ class: center, middle
 ---
 - Explained code from the start
 
+```{r, message=FALSE, eval=FALSE}
+library("tigris")
+oh <- counties(state="OH")
+ham0 <- oh %>% 
+        st_as_sf(.) %>% 
+        filter(NAME=="Hamilton")
+ham <- st_transform(ham0, 4326)
+```
+
+```{r, include=FALSE, eval=FALSE}
+library("raster")
+# getData("SRTM", lon=-8, lat=45, path="data")
+# getData("SRTM", lon=-8, lat=40, path="data")
+# dem <- raster("data/srtm_35_04.tif")
+# system.time(plot(dem))
+# system.time(image(dem))
+# system.time(rasterVis::levelplot(dem))
+# getData("SRTM", lon=-85, lat=40, path="data")
+library("tigris")
+library("sf")
+library("tidyverse")
+oh <- counties(state="OH")
+ham <- oh %>% 
+        st_as_sf(.) %>% 
+        filter(NAME=="Hamilton")
+plot(ham[0])
+ham %>% st_write(., "data/hamilton_county.gpkg")
+
+dem <- raster("data/srtm_20_05.tif")
+
+
+dem2 <- crop(dem, extent(-85, -84, 38.8, 39.4))
+writeRaster(dem2, "data/srtm.tif")
+plot(dem2)
+plot(ham, add = TRUE)
+```
+
 ---
 class: center, middle
 # Part V - The end
 
 ---
-### Geocomputation with R
+
+![](figs/geocompr.png)
 
 The online version of the book is at http://robinlovelace.net/geocompr/ and its source code at https://github.com/robinlovelace/geocompr.
 
