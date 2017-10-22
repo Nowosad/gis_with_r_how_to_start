@@ -157,20 +157,33 @@ animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 ---
 ### Interactive visualization
 
+<!-- https://rstudio.github.io/leaflet/ -->
+
 ```{r}
-library("leaflet")
-leaflet(ham_sp) %>%
-        addProviderTiles(providers$Stamen.Watercolor) %>% 
-        # addTiles() %>%
+library(tigris)
+library(leaflet)
+library(sf)
+library(dplyr)
+library(osmdata)
+
+oh <- counties(state="OH")
+hamilton <- oh %>% 
+        st_as_sf(.) %>% 
+        filter(NAME=="Hamilton") %>% 
+        st_transform(4326)
+
+pubs = opq(bbox = "Cincinnati OH") %>% 
+  add_osm_feature(key = "amenity", value = "pub") %>% 
+  osmdata_sf()
+
+leaflet(hamilton) %>%
+        addTiles(group = "OSM") %>%
+        addProviderTiles(providers$Stamen.Watercolor, group = "Watercolor") %>% 
+        addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>% 
+        addLayersControl(    baseGroups = c("OSM", "Watercolor", "Toner Lite")) %>% 
         addPolygons() %>% 
-        addMarkers(data=ham_cities_sp, popup=~as.character(name))
+        addMarkers(data = pubs$osm_points, popup=~as.character(name))
 ```
-
-<!-- mapview or tmap -->
-
----
-### Interactive app
-<!-- Shiny -->
 
 ---
 ### Raster calculations
@@ -268,6 +281,11 @@ levelplot(my_terrain)
 
 
 <!-- points of ndvi -> a little bit of geostat -> compare to the previous map -> plots -->
+
+---
+### Geocoding
+
+
 
 ---
 class: center, middle
