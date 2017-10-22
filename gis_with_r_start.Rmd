@@ -159,7 +159,7 @@ animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 
 <!-- https://rstudio.github.io/leaflet/ -->
 
-```{r}
+```{r, eval=FALSE}
 library(tigris)
 library(leaflet)
 library(sf)
@@ -188,7 +188,7 @@ leaflet(hamilton) %>%
 ---
 ### Raster calculations
 
-```{r}
+```{r, eval=FALSE}
 library(raster)
 download_landsat8 <- function(destination_filename, band){
         filename <- paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
@@ -217,7 +217,7 @@ hist(my_ndvi)
 ---
 ###
 
-```{r}
+```{r, eval=FALSE}
 library(raster)
 # getData('SRTM', lon = 5, lat = 45, path = "data")
 srtm = raster("data/srtm_38_04.tif")
@@ -285,7 +285,30 @@ levelplot(my_terrain)
 ---
 ### Geocoding
 
+```{r, eval=FALSE}
+# http://happygitwithr.com/api-tokens.html
+# install.packages("opencage")
+library(opencage)
+library(tidyverse)
+library(sf)
 
+cat("OPENCAGE_KEY=2d83e585202b49a492307f5860dbc9d0\n",
+    file=file.path(normalizePath("~/"), ".Renviron"),
+    append=TRUE)
+Sys.getenv("OPENCAGE_KEY")
+
+my_places = c("New York", "Los Angeles", "Chicago", "Houston", "Philadelphia")
+
+output <- my_places %>%
+        map(opencage_forward, limit = 1) %>% 
+        map_df(1)
+
+output_sf <- st_as_sf(output, coords = c("geometry.lng", "geometry.lat"), crs = 4326)
+plot(output_sf$geometry)
+
+library(mapview)
+mapview(output_sf)
+```
 
 ---
 class: center, middle
