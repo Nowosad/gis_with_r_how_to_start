@@ -33,56 +33,58 @@ knitr::opts_chunk$set(fig.align = "center", warning = FALSE, message = FALSE)
 # Part I - Examples
 
 ---
-### Static visualization
+### Static visualization (I)
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, out.width = "650px"}
 knitr::include_graphics("figs/01_world_globe.png")
 ```
 
 ---
-### Static visualization
-https://hafen.github.io/geofacet/
+### Static visualization (II)
 
-
-```{r}
+```{r, echo = FALSE, out.width = "600px"}
 knitr::include_graphics("figs/02_state_unemp.png")
 ```
 
 ---
-### Static visualization\
+### Static visualization (III)
 
-```{r}
+```{r, echo = FALSE, out.width = "600px"}
 knitr::include_graphics("figs/03_ohio_linemap.png")
 ```
 
 ---
 ### Animation
 
-```{r}
+```{r, echo = FALSE, out.width = "550px"}
 knitr::include_graphics("figs/04_anim.gif")
 ```
 
 ---
 ### Interactive visualization
 
-<iframe src="05_leaflet.html" height="600" width="700"></iframe> 
+<iframe src="05_leaflet.html" height="500" width="700"></iframe> 
 
 ---
 ### Remote sensing calculations
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width = "700px"}
 knitr::include_graphics("figs/06_ndvi.png")
 ```
 
 ---
 ### Terrain calculations
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width = "650px"}
 knitr::include_graphics("figs/07_terrain.png")
 ```
 
 ---
 ### Geocoding
+
+What's the coordinates of New York, Los Angeles, Chicago, Houston, and Philadelphia?
+
+<iframe src="08_geocoding.html" height="450" width="700"></iframe> 
 
 ---
 class: center, middle
@@ -212,11 +214,11 @@ library("sf")
 ### Reading spatial data
 
 ```{r}
-wrld <- st_read("data/wrld.shp")
+wrld = st_read("data/wrld.shp")
 ```
 
 ```{r}
-ham <- st_read("data/hamilton_county.gpkg")
+ham = st_read("data/hamilton_county.gpkg")
 ```
 
 ---
@@ -269,7 +271,7 @@ library("dplyr")
 - `filter()`:
 
 ```{r}
-wrld_fil <- filter(wrld, pop < 297517)
+wrld_fil = filter(wrld, pop < 297517)
 ```
 
 ```{r, echo=FALSE}
@@ -282,7 +284,7 @@ wrld_fil[1:3, ]
 - `mutate()`:
 
 ```{r}
-wrld_mut <- mutate(wrld, pop_density = pop/area_km2)
+wrld_mut = mutate(wrld, pop_density = pop/area_km2)
 ```
 
 ```{r, echo=FALSE}
@@ -295,7 +297,7 @@ wrld_mut[1:3, ]
 - `summarize()`:
 
 ```{r}
-wrld_sum1 <- summarize(wrld, pop_sum = sum(pop, na.rm = TRUE), 
+wrld_sum1 = summarize(wrld, pop_sum = sum(pop, na.rm = TRUE), 
                       pop_mean = mean(pop, na.rm = TRUE), 
                       pop_median = median(pop, na.rm = TRUE))
 ```
@@ -310,7 +312,7 @@ wrld_sum1[1, ]
 - `summarize()`:
 
 ```{r}
-wrld_sum1 <- wrld %>% 
+wrld_sum1 = wrld %>% 
         group_by(continent) %>% 
         summarize(pop_sum = sum(pop, na.rm = TRUE), 
                       pop_mean = mean(pop, na.rm = TRUE), 
@@ -331,7 +333,7 @@ st_crs(wrld)
 - The `st_transform()` can be used to transform coordinates
 
 ```{r}
-wrld_3857 <- st_transform(wrld, 3857)
+wrld_3857 = st_transform(wrld, 3857)
 st_crs(wrld_3857)
 ```
 
@@ -378,7 +380,7 @@ library("raster")
 ### Reading
 
 ```{r}
-dem <- raster("data/srtm.tif")
+dem = raster("data/srtm.tif")
 dem
 ```
 
@@ -424,7 +426,7 @@ inMemory(dem)
 - the `getValues` function returns values from a raster object:
 
 ```{r}
-values_dem <- getValues(dem)
+values_dem = getValues(dem)
 ```
 
 ```{r, echo=FALSE}
@@ -436,7 +438,7 @@ values_dem[1:50]
 
 .pull-left[
 ```{r}
-new_dem <- dem + 50
+new_dem = dem + 50
 ```
 
 ```{r, fig.align="center", fig.height=5, echo=FALSE}
@@ -446,7 +448,7 @@ plot(new_dem)
 
 .pull-right[
 ```{r}
-new_dem2 <- dem * new_dem
+new_dem2 = dem * new_dem
 ```
 
 ```{r, fig.align="center", fig.height=5, echo=FALSE}
@@ -462,7 +464,7 @@ crs(dem)
 ```
 
 ```{r}
-dem3857 <- projectRaster(dem, 
+dem3857 = projectRaster(dem, 
                          crs="+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0
                          +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0
                          +units=m +no_defs")
@@ -487,12 +489,12 @@ dev.off()
 ### Extract
 
 ```{r}
-ham_cities_sp <- as(ham_cities_sf, "Spatial")
+ham_cities_sp = as(ham_cities_sf, "Spatial")
 raster::extract(dem, ham_cities_sp)
 ```
 
 ```{r}
-ham_cities_sf$dem <- raster::extract(dem, ham_cities_sp)
+ham_cities_sf$dem = raster::extract(dem, ham_cities_sp)
 ham_cities_sf
 ```
 
@@ -500,13 +502,13 @@ ham_cities_sf
 ### Crop
 
 ```{r}
-ham84 <- st_transform(ham, 4326)
-ham_sp <- as(ham84, "Spatial")
+ham84 = st_transform(ham, 4326)
+ham_sp = as(ham84, "Spatial")
 ```
 
 .pull-left[ 
 ```{r}
-dem_crop <- crop(dem, ham_sp)
+dem_crop = crop(dem, ham_sp)
 ```
 
 ```{r, echo=FALSE}
@@ -516,7 +518,7 @@ plot(dem_crop)
 
 .pull-right[ 
 ```{r}
-dem_mask <- mask(dem_crop, ham_sp)
+dem_mask = mask(dem_crop, ham_sp)
 ```
 
 ```{r, echo=FALSE}
@@ -576,9 +578,9 @@ plot(dem)
 
 ```{r, message=FALSE, fig.align="center", fig.height=4}
 library("rasterVis")
-my_theme <- rasterTheme(region=brewer.pal("RdYlGn", n = 9))
-p <- levelplot(dem_crop, margin = FALSE, par.settings = my_theme)
-p <- p + layer(sp.lines(ham_sp, lwd = 3, col = "darkgrey"))
+my_theme = rasterTheme(region=brewer.pal("RdYlGn", n = 9))
+p = levelplot(dem_crop, margin = FALSE, par.settings = my_theme)
+p = p + layer(sp.lines(ham_sp, lwd = 3, col = "darkgrey"))
 p + layer(sp.points(ham_cities_sp, pch = 19, col = "black"))
 ```
 
@@ -599,20 +601,18 @@ tm_shape(wrld, projection="wintri") +
 ### **leaflet**
 
 ```{r, eval=FALSE}
-library("leaflet")
+library(leaflet)
 leaflet(ham_sp) %>%
         addProviderTiles(providers$Stamen.Watercolor) %>% 
-        # addTiles() %>%
         addPolygons() %>% 
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 ```
 
 ```{r, echo=FALSE, message=FALSE}
 library(widgetframe)
-library("leaflet")
-l <- leaflet(ham_sp) %>%
+library(leaflet)
+l = leaflet(ham_sp) %>%
         addProviderTiles(providers$Stamen.Watercolor) %>% 
-        # addTiles() %>%
         addPolygons() %>% 
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 frameWidget(l, height = "400")
@@ -623,7 +623,14 @@ class: center, middle
 # Part IV - Examples
 
 ---
-### Static visualization
+### Static visualization (I)
+
+```{r, echo = FALSE, out.width = "650px"}
+knitr::include_graphics("figs/01_world_globe.png")
+```
+
+---
+### Static visualization (I)
 
 ```{r, eval = FALSE}
 library(tidyverse)
@@ -631,8 +638,8 @@ library(sf)
 library(spData)
 
 world = st_read(system.file("shapes/world.gpkg", package = "spData"))
-world_globe <- sf::st_transform(world,
-        "+proj=ortho +x_0=0 +y_0=0 +lon_0=-100 +lat_0=40 +ellps=WGS84 +no_defs")
+world_globe = sf::st_transform(world,
+        "+proj=ortho +x_0=0 +y_0=0 +lon_0=-100 +lat_0=40")
 
 p1 = ggplot(world_globe) +
         geom_sf(data = world_globe, aes(fill = lifeExp))  +
@@ -644,7 +651,14 @@ ggsave(p1, file="figs/01_world_globe.png",
 ```
 
 ---
-### Static visualization
+### Static visualization (II)
+
+```{r, echo = FALSE, out.width = "600px"}
+knitr::include_graphics("figs/02_state_unemp.png")
+```
+
+---
+### Static visualization (II)
 https://hafen.github.io/geofacet/
 
 ```{r, eval=FALSE}
@@ -653,7 +667,7 @@ library(ggplot2)
 data("state_unemp", package = "geofacet")
 p2 = ggplot(state_unemp, aes(year, rate)) +
         geom_line() +
-        facet_geo(~ state, grid = "us_state_grid2", label = "name") +
+        facet_geo(~state, grid = "us_state_grid2", label = "name") +
         scale_x_continuous(labels = function(x) paste0("'", substr(x, 3, 4))) +
         labs(title = "Seasonally Adjusted US Unemployment Rate 2000-2016",
              caption = "Data Source: bls.gov",
@@ -666,7 +680,14 @@ ggsave(p2, file="figs/02_state_unemp.png",
 ```
 
 ---
-### Static visualization
+### Static visualization (III)
+
+```{r, echo = FALSE, out.width = "600px"}
+knitr::include_graphics("figs/03_ohio_linemap.png")
+```
+
+---
+### Static visualization (III)
 https://github.com/rCarto/linemap
 
 ```{r, eval = FALSE}
@@ -675,11 +696,8 @@ library(tidycensus)
 library(linemap)
 # A key can be acquired at http://api.census.gov/data/key_signup.html
 # census_api_key("your key")
-oh_pop <- get_acs(geography = "tract", 
-                     variables = "B01003_001E", 
-                     state = "OH",
-                     geometry = TRUE) 
-
+oh_pop = get_acs(geography = "tract", variables = "B01003_001E", 
+                  state = "OH", geometry = TRUE) 
 plot(oh_pop$geometry)
 oh_pop
 oh_pop2 = st_transform(oh_pop, 26917)
@@ -699,33 +717,34 @@ dev.off()
 ---
 ### Animation
 
-https://github.com/mtennekes/tmap/issues/142
+```{r, echo = FALSE, out.width = "550px"}
+knitr::include_graphics("figs/04_anim.gif")
+```
+---
+### Animation
+
+<!-- https://github.com/mtennekes/tmap/issues/142 -->
 
 ```{r, eval=FALSE}
-library("gapminder")
-library("tidyverse")
-library("sf")
-library("tmap")
-library("spData")
+library(gapminder)
+library(tidyverse)
+library(sf)
+library(tmap)
+library(spData)
 europe_area = st_polygon(list(rbind(c(-13, 34), c(-13, 72),
                                     c(43, 72), c(43, 34), c(-13, 34)))) %>% 
-        st_sfc() %>% 
-        st_set_crs(st_crs(world))
-
+        st_sfc(crs = st_crs(world)) 
 europe = st_intersection(world, europe_area) 
 europe_gdp = europe %>% 
         inner_join(gapminder, by = c("name_long" = "country"))
-
 m1 = tm_shape(europe) + 
         tm_fill("grey") + 
      tm_shape(europe_gdp) + 
         tm_fill("gdpPercap.y", title = "GDP per capita: ") +
         tm_borders() + 
         tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE) + 
-        tm_legend(text.size = 1,
-                  title.size = 1.2,
-                  position = c("left", "TOP"),
-                  height = 0.3)
+        tm_legend(text.size = 1, title.size = 1.2, 
+                  position = c("left", "TOP"), height = 0.3)
 
 animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 
@@ -750,6 +769,11 @@ animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 ---
 ### Interactive visualization
 
+<iframe src="05_leaflet.html" height="500" width="700"></iframe> 
+
+---
+### Interactive visualization
+
 <!-- https://rstudio.github.io/leaflet/ -->
 
 ```{r, eval=FALSE}
@@ -759,17 +783,14 @@ library(sf)
 library(dplyr)
 library(osmdata)
 library(widgetframe)
-
-oh <- counties(state="OH")
-hamilton <- oh %>% 
-        st_as_sf(.) %>% 
-        filter(NAME=="Hamilton") %>% 
+oh = counties(state="OH")
+hamilton = oh %>% 
+        st_as_sf() %>% 
+        filter(NAME == "Hamilton") %>% 
         st_transform(4326)
-
 pubs = opq(bbox = "Cincinnati OH") %>% 
   add_osm_feature(key = "amenity", value = "pub") %>% 
   osmdata_sf()
-
 l1 = leaflet(hamilton) %>%
         addTiles(group = "OSM") %>%
         addProviderTiles(providers$Stamen.Watercolor, group = "Watercolor") %>% 
@@ -777,24 +798,28 @@ l1 = leaflet(hamilton) %>%
         addLayersControl(    baseGroups = c("OSM", "Watercolor", "Toner Lite")) %>% 
         addPolygons() %>% 
         addMarkers(data = pubs$osm_points, popup=~as.character(name))
-
 saveWidget(l1, file = "05_leaflet.html", selfcontained = FALSE)
 ```
 
 ---
-### Raster calculations
+### Remote sensing calculations
+
+```{r, echo=FALSE, out.width = "700px"}
+knitr::include_graphics("figs/06_ndvi.png")
+```
+
+---
+### Remote sensing calculations
 
 ```{r, eval=FALSE}
 library(raster)
-download_landsat8 <- function(destination_filename, band){
-        filename <- paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
+download_landsat8 = function(destination_filename, band){
+        filename = paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
         download.file(filename, destination_filename, method='auto')
         return(destination_filename)
 }
-
 # download_landsat8("data/landsat_b4.tif", band = 4)
 # download_landsat8("data/landsat_b5.tif", band = 5)
-
 b4 = raster("data/landsat_b4.tif")
 b5 = raster("data/landsat_b5.tif")
 
@@ -810,6 +835,13 @@ par(mfrow=c(1,2))
 plot(my_ndvi)
 hist(my_ndvi)
 dev.off()
+```
+
+---
+### Terrain calculations
+
+```{r, echo=FALSE, out.width = "650px"}
+knitr::include_graphics("figs/07_terrain.png")
 ```
 
 ---
@@ -834,45 +866,12 @@ plot(my_terrain)
 dev.off()
 ```
 
+---
+### Geocoding
 
-<!-- ```{r, eval=FALSE, echo=FALSE} -->
-<!-- library(raster) -->
-<!-- library(sf) -->
-<!-- set.seed(2017-10-22) -->
-<!-- # getData('worldclim', var = 'tmax', res = 0.5, lon = 5, lat = 45, path = "data") -->
-<!-- my_area = extent(c(9, 9.1, 42, 42.05)) -->
-<!-- tmax = raster("data/wc0.5/tmax11_16.bil") %>%  -->
-<!--         crop(my_area) %>%  -->
-<!--         sampleRandom(size = 100, sp = TRUE) %>%  -->
-<!--         st_as_sf() %>%  -->
-<!--         dplyr::mutate(tmax11_16 = tmax11_16/10) %>%  -->
-<!--         st_set_crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") %>%  -->
-<!--         st_write("data/tmax_points.gpkg", layer_options = "OVERWRITE=true") -->
-<!-- ``` -->
+What's the coordinates of New York, Los Angeles, Chicago, Houston, and Philadelphia?
 
-
-<!-- ```{r, eval=FALSE, echo=FALSE} -->
-<!-- library(sf) -->
-<!-- library(raster) -->
-<!-- library(gstat) -->
-<!-- tmax = st_read("data/tmax_points.gpkg") -->
-<!-- plot(tmax) -->
-
-<!-- # getData('SRTM', lon = 5, lat = 45, path = "data") -->
-<!-- srtm = raster("data/srtm_38_04.tif") -->
-<!-- my_area = extent(c(9, 9.1, 42, 42.05)) -->
-<!-- my_srtm = crop(srtm, my_area) -->
-
-<!-- tmax_sp = as(tmax, "Spatial") -->
-<!-- my_srtm_sp = as(my_srtm, 'SpatialPointsDataFrame') -->
-
-<!-- g <- gstat(NULL, id='tmax', form = tmax11_16~1, data = tmax_sp) -->
-<!-- g <- gstat(g, id='srtm', form = srtm_38_04~1, data = my_srtm_sp) -->
-<!-- g -->
-
-<!-- v <- variogram(g) -->
-<!-- plot(v) -->
-<!-- ``` -->
+<iframe src="08_geocoding.html" height="450" width="700"></iframe> 
 
 ---
 ### Geocoding
@@ -883,56 +882,21 @@ library(opencage)
 library(tidyverse)
 library(sf)
 library(mapview)
-library(widgetframe)
+library(htmlwidgets)
 
-my_places = c("New York", "Los Angeles", "Chicago", "Houston", "Philadelphia")
+my_places = c("New York", "Los Angeles", "Chicago",
+              "Houston", "Philadelphia")
 
-output <- my_places %>%
+output = my_places %>%
         map(opencage_forward, limit = 1) %>% 
         map_df(1)
 
-output_sf <- st_as_sf(output, coords = c("geometry.lng", "geometry.lat"), crs = 4326)
+output_sf = st_as_sf(output, 
+                     coords = c("geometry.lng", "geometry.lat"), crs = 4326)
 plot(output_sf$geometry, axes = TRUE)
 
 m1 = mapview(output_sf)
-saveWidget(m1, file = "08_geocoding.html", selfcontained = FALSE)
-```
-
-```{r, message=FALSE, eval=FALSE}
-library("tigris")
-oh <- counties(state="OH")
-ham0 <- oh %>% 
-        st_as_sf(.) %>% 
-        filter(NAME=="Hamilton")
-ham <- st_transform(ham0, 4326)
-```
-
-```{r, include=FALSE, eval=FALSE}
-library("raster")
-# getData("SRTM", lon=-8, lat=45, path="data")
-# getData("SRTM", lon=-8, lat=40, path="data")
-# dem <- raster("data/srtm_35_04.tif")
-# system.time(plot(dem))
-# system.time(image(dem))
-# system.time(rasterVis::levelplot(dem))
-# getData("SRTM", lon=-85, lat=40, path="data")
-library("tigris")
-library("sf")
-library("tidyverse")
-oh <- counties(state="OH")
-ham <- oh %>% 
-        st_as_sf(.) %>% 
-        filter(NAME=="Hamilton")
-plot(ham[0])
-ham %>% st_write(., "data/hamilton_county.gpkg")
-
-dem <- raster("data/srtm_20_05.tif")
-
-
-dem2 <- crop(dem, extent(-85, -84, 38.8, 39.4))
-writeRaster(dem2, "data/srtm.tif")
-plot(dem2)
-plot(ham, add = TRUE)
+mapshot(m1, "08_geocoding.html")
 ```
 
 ---
