@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GIS with R   how to start?</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Jakub Nowosad" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/blazy/blazy.min.js"></script>
+    <script src="libs/pymjs/pym.v1.js"></script>
+    <script src="libs/widgetframe-binding/widgetframe.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# GIS with R <br/> how to start?
+## 🗺
+### Jakub Nowosad
+### GIS Learning Community, Cincinnati, 2017-11-01
+
+---
+
+
+
+
+### Prerequisites
+
+- The latest versions of [R](https://cloud.r-project.org/) and [RStudio](https://www.rstudio.com/)
+- Installed a set of packages by running the below code in R:
+
+
+```r
+install.packages(c("raster", "sf", "rasterVis", "tmap", "leaflet",
+                   "widgetframe", "tidyverse", "spData", "geofacet",
+                   "tidycensus", "linemap", "gapminder", "tigris", 
+                   "osmdata", "mapview", "opencage"))
+```
+
+Note: `tidycensus` and `opencage` require API keys. More info [here](https://walkerke.github.io/tidycensus/articles/basic-usage.html) and [here](https://github.com/ropensci/opencage). 
+&lt;!-- http://happygitwithr.com/api-tokens.html --&gt;
+
+---
+class: center, middle
+
+# Part I - Examples
+
+---
+### Static visualization (I)
+
+&lt;img src="figs/01_world_globe.png" width="650px" style="display: block; margin: auto;" /&gt;
+
+---
+### Static visualization (II)
+
+&lt;img src="figs/02_state_unemp.png" width="600px" style="display: block; margin: auto;" /&gt;
+
+---
+### Static visualization (III)
+
+&lt;img src="figs/03_ohio_linemap.png" width="600px" style="display: block; margin: auto;" /&gt;
+
+---
+### Animation
+
+&lt;img src="figs/04_anim.gif" width="550px" style="display: block; margin: auto;" /&gt;
+
+---
+### Interactive visualization
+
+&lt;iframe src="05_leaflet.html" height="500" width="700"&gt;&lt;/iframe&gt; 
+
+---
+### Remote sensing calculations
+
+&lt;img src="figs/06_ndvi.png" width="700px" style="display: block; margin: auto;" /&gt;
+
+---
+### Terrain calculations
+
+&lt;img src="figs/07_terrain.png" width="650px" style="display: block; margin: auto;" /&gt;
+
+---
+### Geocoding
+
+What's the coordinates of New York, Los Angeles, Chicago, Houston, and Philadelphia?
+
+&lt;iframe src="08_geocoding.html" height="450" width="700"&gt;&lt;/iframe&gt; 
+
+---
+class: center, middle
+# Part II - An intro to R
+
+---
+### How to get R
+
+- https://www.r-project.org/
+- http://cran.rstudio.com/bin/linux/
+- http://cran.rstudio.com/bin/windows/base/
+- http://cran.rstudio.com/bin/macosx/
+
+![](figs/R.png)  
+
+---
+### Rstudio
+
+- http://www.rstudio.com/ide/download/desktop
+- This is an Integrated Development Environment (IDE) for R
+- RStudio has many useful features, such as text editor, syntax highlighting, suggested code auto-completion, and many more
+
+![](figs/rstudio.png)
+
+---
+### How to get help?
+
+
+```r
+# if you know a function name
+?crop
+```
+
+- You can also look for help using the help window or **F1** key
+
+## Online help
+- [stackoverflow.com](http://stackoverflow.com/questions/tagged/r) - R related questions
+- [gis.stackexchange.com](https://gis.stackexchange.com/questions/tagged/r) - GIS and R related questions
+- [twitter](http://twitter.com/) - `#rstats`
+- Web search engines [Rseek](http://www.rseek.org/), [Duckduckgo](http://duckduckgo.com/), [Google](http://google.com/), [Bing](http://bing.com/), etc.
+
+---
+### How to start with R?
+
+- [Intro to R](https://github.com/Nowosad/Intro_to_R)
+- [Beginner's guide to R: Introduction](https://www.computerworld.com/article/2497143/business-intelligence/business-intelligence-beginner-s-guide-to-r-introduction.html)
+- [R for cats](https://rforcats.net/)
+- [Introducing R to a non-programmer in one hour](http://alyssafrazee.com/introducing-R.html)
+- [DataCamp: Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r)
+- [try R](http://tryr.codeschool.com/)
+- [R news and tutorials contributed by R bloggers](https://www.r-bloggers.com/)
+- [RStudio Cheat Sheets](https://www.rstudio.com/resources/cheatsheets/)
+- [R for Data Science](http://r4ds.had.co.nz/)
+- [Efficient R programming](https://csgillespie.github.io/efficientR/)
+- [60+ R resources to improve your data skills](http://www.computerworld.com/article/2497464/business-intelligence/business-intelligence-60-r-resources-to-improve-your-data-skills.html)
+
+---
+### R packages
+
+- A package is a group of functions
+- `install.packages()` can be used to install packages from CRAN:
+
+
+```r
+install.packages("raster")
+```
+
+- To use a package, load it with function `library()`
+- Unlike `install.packages()`, you need to load selected packages everytime you run R!
+
+
+```r
+library(raster)
+```
+
+---
+class: center, middle
+# Part III - An intro to spatial R
+
+---
+### Spatial R 
+
+&lt;table&gt;
+&lt;caption&gt;Differences in emphasis between the fields of Geographic Information Systems (GIS) and Geographic Data Science (GDS)&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Attribute &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; GIS &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; GDS &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Home disciplines &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Geography &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Geography, Computing, Statistics &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Software focus &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Graphical User Interface &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Code &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Reproduciblility &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Minimal &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Maximal &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+- **sf** and **sp** are the most important R packages to handle vector data; **sf** is a successor of **sp** but its still evolving. Moreover, many other R packages depend on the functions and classes for the **sp** package
+- **raster** is an extension of spatial data classes to work with rasters
+- There are many ways to vizualize spatial data in R, such as the **ggplot2**, **rasterVis**, **tmap**, **leaflet**, and **mapview** packages
+- It is easy to connect R with a GIS software - GRASS GIS (**rgrass7**), SAGA (**RSAGA**), QGIS (**RQGIS** and **qgisremote**), and ArcGIS (**arcgisbinding**)
+
+---
+### The **sf** package
+
+The **sf** package in an R implementation of [Simple Features](https://en.wikipedia.org/wiki/Simple_Features). This package incorporates:
+- A new spatial data class system in R
+- Functions for reading and writing data
+- Tools for spatial operations on vectors
+
+Most of the functions in this package starts with prefix `st_`.
+
+
+```r
+devtools::install_github("edzer/sfr") # development version
+```
+
+or
+
+
+```r
+install.packages("sf") # stable version
+```
+
+You need a recent version of the GDAL, GEOS, Proj.4, and UDUNITS libraries installed for this to work on Mac and Linux. More information on that at https://github.com/edzer/sfr.
+
+
+```r
+library(sf)
+```
+
+---
+### Reading spatial data
+
+
+```r
+wrld = st_read("data/wrld.shp")
+```
+
+```
+## Reading layer `wrld' from data source `/home/jn/Documents/gis_with_r_start/data/wrld.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 177 features and 10 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+```
+
+
+```r
+ham = st_read("data/hamilton_county.gpkg")
+```
+
+```
+## Reading layer `hamilton_county.gpkg' from data source `/home/jn/Documents/gis_with_r_start/data/hamilton_county.gpkg' using driver `GPKG'
+## Simple feature collection with 1 feature and 17 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: -84.8203 ymin: 39.02153 xmax: -84.25651 ymax: 39.31206
+## epsg (SRID):    4269
+## proj4string:    +proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs
+```
+
+---
+### Reading spatial data - text files
+
+
+```r
+ham_cities_sf = st_read("data/hamiltion_cities.csv", 
+                        options = c("X_POSSIBLE_NAMES=X",
+                                    "Y_POSSIBLE_NAMES=Y",
+                                    "KEEP_GEOM_COLUMNS=NO"))
+```
+
+```
+## options:        X_POSSIBLE_NAMES=X Y_POSSIBLE_NAMES=Y KEEP_GEOM_COLUMNS=NO 
+## Reading layer `hamiltion_cities' from data source `/home/jn/Documents/gis_with_r_start/data/hamiltion_cities.csv' using driver `CSV'
+## Simple feature collection with 19 features and 2 fields
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: -84.81995 ymin: 39.07862 xmax: -84.26384 ymax: 39.29034
+## epsg (SRID):    NA
+## proj4string:    NA
+```
+
+---
+### Writing spatial data
+
+
+
+
+```r
+st_write(wrld, "data/new_wrld.shp")
+```
+
+```
+## Writing layer `new_wrld' to data source `data/new_wrld.shp' using driver `ESRI Shapefile'
+## features:       177
+## fields:         10
+## geometry type:  Multi Polygon
+```
+
+
+```r
+st_write(wrld, "data/new_wrld.gpkg")
+```
+
+```
+## Writing layer `new_wrld' to data source `data/new_wrld.gpkg' using driver `GPKG'
+## features:       177
+## fields:         10
+## geometry type:  Multi Polygon
+```
+
+
+
+---
+### **sf** structure
+
+The **sf** object is a table (`data.frame`) with an additional geometry column - typically named `geom` or `geometry` and spatial metadata (`geometry type`, `dimension`, `bbox`, `epsg (SRID)`, `proj4string`).
+
+
+```
+## Simple feature collection with 5 features and 3 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -73.41544 ymin: -55.25 xmax: 75.15803 ymax: 42.68825
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   iso_a2            name_long     continent                       geometry
+## 1     AF          Afghanistan          Asia MULTIPOLYGON (((61.21081709...
+## 2     AO               Angola        Africa MULTIPOLYGON (((16.32652835...
+## 3     AL              Albania        Europe MULTIPOLYGON (((20.59024743...
+## 4     AE United Arab Emirates          Asia MULTIPOLYGON (((51.57951867...
+## 5     AR            Argentina South America MULTIPOLYGON (((-65.5 -55.2...
+```
+
+---
+### Attributes - the **dplyr** package
+
+- It is easy to use the **dplyr** package on `sf` objects:
+
+
+```r
+library(dplyr)
+```
+
+- `filter()`:
+
+
+```r
+wrld_fil = filter(wrld, pop &lt; 297517)
+```
+
+
+```
+## Simple feature collection with 3 features and 10 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -73.297 ymin: -22.39998 xmax: 167.8449 ymax: 83.64513
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   iso_a2     name_long     continent region_un        subregion
+## 1     GL     Greenland North America  Americas Northern America
+## 2     NC New Caledonia       Oceania   Oceania        Melanesia
+## 3     VU       Vanuatu       Oceania   Oceania        Melanesia
+##                type   area_km2    pop  lifeExp gdpPercap
+## 1           Country 2206644.44  56295       NA        NA
+## 2        Dependency   23219.01 268000 77.57317        NA
+## 3 Sovereign country    7490.04 258883 71.91832  2891.973
+##                         geometry
+## 1 MULTIPOLYGON (((-46.76379 8...
+## 2 MULTIPOLYGON (((165.7799898...
+## 3 MULTIPOLYGON (((167.8448767...
+```
+
+---
+### Attributes - the **dplyr** package
+
+- `mutate()`:
+
+
+```r
+wrld_mut = mutate(wrld, pop_density = pop/area_km2)
+```
+
+
+```
+## Simple feature collection with 3 features and 11 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 11.6401 ymin: -17.93064 xmax: 75.15803 ymax: 42.68825
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   iso_a2   name_long continent region_un       subregion              type
+## 1     AF Afghanistan      Asia      Asia   Southern Asia Sovereign country
+## 2     AO      Angola    Africa    Africa   Middle Africa Sovereign country
+## 3     AL     Albania    Europe    Europe Southern Europe Sovereign country
+##    area_km2      pop  lifeExp gdpPercap pop_density
+## 1  652270.1 31627506 60.37446  1844.022    48.48836
+## 2 1245463.7 24227524 52.26688  6955.960    19.45261
+## 3   29694.8  2893654 77.83046 10698.525    97.44649
+##                         geometry
+## 1 MULTIPOLYGON (((61.21081709...
+## 2 MULTIPOLYGON (((16.32652835...
+## 3 MULTIPOLYGON (((20.59024743...
+```
+
+---
+### Attributes - the **dplyr** package
+
+- `summarize()`:
+
+
+```r
+wrld_sum1 = summarize(wrld, pop_sum = sum(pop, na.rm = TRUE), 
+                      pop_mean = mean(pop, na.rm = TRUE), 
+                      pop_median = median(pop, na.rm = TRUE))
+```
+
+
+```
+## Simple feature collection with 1 feature and 3 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##      pop_sum pop_mean pop_median                       geometry
+## 1 7208968708 42910528   10521458 MULTIPOLYGON (((-159.208183...
+```
+
+---
+### Attributes - the **dplyr** package
+
+- `summarize()`:
+
+
+```r
+wrld_sum1 = wrld %&gt;% 
+        group_by(continent) %&gt;% 
+        summarize(pop_sum = sum(pop, na.rm = TRUE), 
+                      pop_mean = mean(pop, na.rm = TRUE), 
+                      pop_median = median(pop, na.rm = TRUE))
+```
+
+
+```
+## Simple feature collection with 3 features and 4 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -180 ymin: -90 xmax: 180 ymax: 55.38525
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+## # A tibble: 3 x 5
+##    continent    pop_sum pop_mean pop_median          geometry
+##       &lt;fctr&gt;      &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;  &lt;simple_feature&gt;
+## 1     Africa 1147005839 23895955   14129805 &lt;MULTIPOLYGON...&gt;
+## 2 Antarctica          0      NaN         NA &lt;MULTIPOLYGON...&gt;
+## 3       Asia 4306025131 95689447   18772481 &lt;MULTIPOLYGON...&gt;
+```
+
+---
+### CRS and Reprojection
+
+
+```r
+st_crs(wrld)
+```
+
+```
+## Coordinate Reference System:
+##   EPSG: 4326 
+##   proj4string: "+proj=longlat +datum=WGS84 +no_defs"
+```
+
+- The `st_transform()` can be used to transform coordinates
+
+
+```r
+wrld_3857 = st_transform(wrld, 3857)
+st_crs(wrld_3857)
+```
+
+```
+## Coordinate Reference System:
+##   EPSG: 3857 
+##   proj4string: "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs"
+```
+
+---
+### CRS and Reprojection
+
+
+
+![](figs/coord_compare.png)
+
+---
+### Spatial operations
+
+- Spatial subsetting
+- Spatial joining/aggregation
+- Topological relations
+- Distances
+- Spatial geometry modification
+
+
+```r
+continents = wrld %&gt;% 
+        st_set_precision(1000) %&gt;% 
+        st_union()
+plot(continents)
+```
+
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-35-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### The **raster** package
+
+The **raster** package consists of method and classes for raster processing. It allows to:
+
+- Read and write raster data
+- Perform raster algebra and raster manipulations
+- Work on large datasets due to its ability to process data in chunks
+- Visualize raster data
+- Many more...
+
+Basic **raster** operations are ilustrated at https://rpubs.com/etiennebr/visualraster.
+
+This package has three object classes:
+
+- `RasterLayer` - for single-layer objects
+- `RasterStack` - for multi-layer objects from separate files or a few layers from a single file
+- `RasterBrick` - for multi-layer objects linked to a single file
+
+
+```r
+library(raster)
+```
+---
+### Reading
+
+
+```r
+dem = raster("data/srtm.tif")
+dem
+```
+
+```
+## class       : RasterLayer 
+## dimensions  : 720, 1200, 864000  (nrow, ncol, ncell)
+## resolution  : 0.0008333333, 0.0008333333  (x, y)
+## extent      : -85.00042, -84.00042, 38.79958, 39.39958  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
+## data source : /home/jn/Documents/gis_with_r_start/data/srtm.tif 
+## names       : srtm 
+## values      : 109, 323  (min, max)
+```
+
+---
+### Writing
+
+
+
+
+```r
+writeRaster(dem, "data/new_dem.tif")
+```
+
+
+
+```r
+writeRaster(dem, "data/new_dem2.tif", 
+            datatype = "FLT4S", options=c("COMPRESS=DEFLATE"))
+```
+
+
+
+
+```r
+writeFormats()
+```
+
+```
+##       name        long_name                                
+##  [1,] "raster"    "R-raster"                               
+##  [2,] "SAGA"      "SAGA GIS"                               
+##  [3,] "IDRISI"    "IDRISI"                                 
+##  [4,] "IDRISIold" "IDRISI (img/doc)"                       
+##  [5,] "BIL"       "Band by Line"                           
+##  [6,] "BSQ"       "Band Sequential"                        
+##  [7,] "BIP"       "Band by Pixel"                          
+##  [8,] "ascii"     "Arc ASCII"                              
+##  [9,] "CDF"       "NetCDF"                                 
+## [10,] "big"       "big.matrix"                             
+## [11,] "ADRG"      "ARC Digitized Raster Graphics"          
+## [12,] "BMP"       "MS Windows Device Independent Bitmap"   
+## [13,] "BT"        "VTP .bt (Binary Terrain) 1.3 Format"    
+## [14,] "CTable2"   "CTable2 Datum Grid Shift"               
+## [15,] "EHdr"      "ESRI .hdr Labelled"                     
+## [16,] "ELAS"      "ELAS"                                   
+## [17,] "ENVI"      "ENVI .hdr Labelled"                     
+## [18,] "ERS"       "ERMapper .ers Labelled"                 
+## [19,] "FITS"      "Flexible Image Transport System"        
+## [20,] "GPKG"      "GeoPackage"                             
+## [21,] "GS7BG"     "Golden Software 7 Binary Grid (.grd)"   
+## [22,] "GSBG"      "Golden Software Binary Grid (.grd)"     
+## [23,] "GTiff"     "GeoTIFF"                                
+## [24,] "GTX"       "NOAA Vertical Datum .GTX"               
+## [25,] "HDF4Image" "HDF4 Dataset"                           
+## [26,] "HFA"       "Erdas Imagine Images (.img)"            
+## [27,] "IDA"       "Image Data and Analysis"                
+## [28,] "ILWIS"     "ILWIS Raster Map"                       
+## [29,] "INGR"      "Intergraph Raster"                      
+## [30,] "ISCE"      "ISCE raster"                            
+## [31,] "ISIS2"     "USGS Astrogeology ISIS cube (Version 2)"
+## [32,] "KRO"       "KOLOR Raw"                              
+## [33,] "LAN"       "Erdas .LAN/.GIS"                        
+## [34,] "Leveller"  "Leveller heightfield"                   
+## [35,] "MBTiles"   "MBTiles"                                
+## [36,] "MRF"       "Meta Raster Format"                     
+## [37,] "netCDF"    "Network Common Data Format"             
+## [38,] "NITF"      "National Imagery Transmission Format"   
+## [39,] "NTv2"      "NTv2 Datum Grid Shift"                  
+## [40,] "PAux"      "PCI .aux Labelled"                      
+## [41,] "PCIDSK"    "PCIDSK Database File"                   
+## [42,] "PCRaster"  "PCRaster Raster File"                   
+## [43,] "PDF"       "Geospatial PDF"                         
+## [44,] "PNM"       "Portable Pixmap Format (netpbm)"        
+## [45,] "RMF"       "Raster Matrix Format"                   
+## [46,] "ROI_PAC"   "ROI_PAC raster"                         
+## [47,] "RST"       "Idrisi Raster A.1"                      
+## [48,] "SAGA"      "SAGA GIS Binary Grid (.sdat)"           
+## [49,] "SGI"       "SGI Image File Format 1.0"              
+## [50,] "Terragen"  "Terragen heightfield"
+```
+
+---
+### **raster** structure
+
+
+```r
+dem
+```
+
+```
+## class       : RasterLayer 
+## dimensions  : 720, 1200, 864000  (nrow, ncol, ncell)
+## resolution  : 0.0008333333, 0.0008333333  (x, y)
+## extent      : -85.00042, -84.00042, 38.79958, 39.39958  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
+## data source : /home/jn/Documents/gis_with_r_start/data/srtm.tif 
+## names       : srtm 
+## values      : 109, 323  (min, max)
+```
+
+
+```r
+inMemory(dem)
+```
+
+```
+## [1] FALSE
+```
+
+---
+### Attributes
+
+- the `getValues` function returns values from a raster object:
+
+
+```r
+values_dem = getValues(dem)
+```
+
+
+```
+##  [1] 191 194 202 204 198 193 189 186 187 188 192 206 221 229 236 238 241
+## [18] 236 226 217 209 205 201 198 203 211 218 220 225 232 237 236 238 242
+## [35] 247 254 257 261 260 258 264 270 272 276 280 281 276 266 266 270
+```
+
+---
+### Attributes
+
+.pull-left[
+
+```r
+new_dem = dem + 50
+```
+
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-48-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+```r
+new_dem2 = dem * new_dem
+```
+
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-50-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### CRS and Reprojection
+
+
+```r
+crs(dem)
+```
+
+```
+## CRS arguments:
+##  +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0
+```
+
+
+```r
+dem3857 = projectRaster(dem, 
+                         crs="+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0
+                         +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0
+                         +units=m +no_defs")
+```
+
+http://spatialreference.org/
+
+---
+### CRS and Reprojection
+
+
+
+![](figs/coord_compare_raster.png)
+
+---
+### Extract
+
+
+```r
+ham_cities_sp = as(ham_cities_sf, "Spatial")
+raster::extract(dem, ham_cities_sp)
+```
+
+```
+##  [1] 276 160 157 161 188 226 260 202 184 261 171 243 258 260 165 178 173
+## [18] 162 162
+```
+
+
+```r
+ham_cities_sf$dem = raster::extract(dem, ham_cities_sp)
+ham_cities_sf
+```
+
+```
+## Simple feature collection with 19 features and 3 fields
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: -84.81995 ymin: 39.07862 xmax: -84.26384 ymax: 39.29034
+## epsg (SRID):    NA
+## proj4string:    NA
+##             name place                       geometry dem
+## 1          Delhi  town POINT (-84.6052225 39.0950595) 276
+## 2        Milford  town  POINT (-84.2958988 39.174625) 160
+## 3      Covington  town  POINT (-84.508371 39.0836224) 157
+## 4       Harrison  town POINT (-84.8199516 39.2619993) 161
+## 5     Cincinnati  city POINT (-84.5124602 39.1014537) 188
+## 6     Springdale  town  POINT (-84.4852213 39.287002) 226
+## 7       Sycamore  town  POINT (-84.347427 39.2800883) 260
+## 8        Norwood  town POINT (-84.4596641 39.1556149) 202
+## 9       Loveland  town POINT (-84.2638406 39.2689562) 184
+## 10   Fort Thomas  town POINT (-84.4483432 39.0786242) 261
+## 11 Saint Bernard  town POINT (-84.4985541 39.1670033) 171
+## 12    Montgomery  town POINT (-84.3539662 39.2282432) 243
+## 13   Forest Park  town POINT (-84.5041108 39.2903353) 258
+## 14      Blue Ash  town POINT (-84.3782817 39.2320073) 260
+## 15        Ludlow  town POINT (-84.5474435 39.0925598) 165
+## 16   Sharonville  town POINT (-84.4132779 39.2681145) 178
+## 17       Reading  town POINT (-84.4421641 39.2236694) 173
+## 18      Bellevue  town POINT (-84.4826482 39.1067078) 162
+## 19       Newport  town POINT (-84.4919524 39.0889469) 162
+```
+
+---
+### Crop
+
+
+```r
+ham84 = st_transform(ham, 4326)
+ham_sp = as(ham84, "Spatial")
+```
+
+.pull-left[ 
+
+```r
+dem_crop = crop(dem, ham_sp)
+```
+
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-58-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[ 
+
+```r
+dem_mask = mask(dem_crop, ham_sp)
+```
+
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-60-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Reading spatial data - data packages
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Package name &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Description &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; osmdata &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Download and import of OpenStreetMap data &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; raster &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The getData() function downloads and imports administrative country, SRTM/ASTER elevation, WorldClim data &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; rnaturalearth &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Functions to download Natural Earth vector and raster data, including world country borders &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; tigirs &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Census TIGER/Line shapefiles in R &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; USAboundaries &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Contemporary state, county, and congressional district boundaries for the United States of America, as well as historical boundaries from 1629 to 2000 for states and counties &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; rnoaa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; An interface to many NOAA data sources &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; rWBclimate &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The World Bank climate data &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+### Basic maps
+
+- Basic maps of `sf` object can be quickly created using the `plot()` function:
+
+
+```r
+plot(wrld[0])
+```
+
+
+```r
+plot(wrld["pop"])
+```
+
+
+
+![](figs/plot_compare.png)
+
+---
+### Basic maps
+
+
+```r
+plot(dem)
+```
+
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-64-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### **rasterVis**
+
+- https://oscarperpinan.github.io/rastervis/
+- http://www.colorbrewer.org
+
+
+```r
+library(rasterVis)
+my_theme = rasterTheme(region=brewer.pal("RdYlGn", n = 9))
+p = levelplot(dem_crop, margin = FALSE, par.settings = my_theme)
+p = p + layer(sp.lines(ham_sp, lwd = 3, col = "darkgrey"))
+p + layer(sp.points(ham_cities_sp, pch = 19, col = "black"))
+```
+
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-65-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### **tmap**
+
+- https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html
+
+
+```r
+library(tmap)
+tm_shape(wrld, projection="wintri") +
+        tm_polygons("lifeExp", style="pretty", palette="RdYlGn",
+                    auto.palette.mapping=FALSE, title=c("Life expactancy")) +
+        tm_style_grey()
+```
+
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-66-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### **leaflet**
+
+
+```r
+library(leaflet)
+leaflet(ham_sp) %&gt;%
+        addTiles() %&gt;% 
+        addPolygons() %&gt;% 
+        addMarkers(data=ham_cities_sp, popup=~as.character(name))
+```
+
+<div id="htmlwidget-10a3a773887e972626c0" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-10a3a773887e972626c0">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-68.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+
+---
+class: center, middle
+# Part IV - Examples
+
+---
+### Static visualization (I)
+
+&lt;img src="figs/01_world_globe.png" width="650px" style="display: block; margin: auto;" /&gt;
+
+---
+### Static visualization (I)
+
+
+```r
+library(tidyverse)
+library(sf)
+library(spData)
+
+world = st_read(system.file("shapes/world.gpkg", package = "spData"))
+world_globe = sf::st_transform(world,
+        "+proj=ortho +x_0=0 +y_0=0 +lon_0=-100 +lat_0=40")
+
+p1 = ggplot(world_globe) +
+        geom_sf(data = world_globe, aes(fill = lifeExp))  +
+        scale_fill_viridis_c(name = "Life expactancy: ") +
+        theme_void()
+p1
+ggsave(p1, file="figs/01_world_globe.png", 
+       width = 70, height = 60, units = "mm", scale = 2)
+```
+
+---
+### Static visualization (II)
+
+&lt;img src="figs/02_state_unemp.png" width="600px" style="display: block; margin: auto;" /&gt;
+
+---
+### Static visualization (II)
+https://hafen.github.io/geofacet/
+
+
+```r
+library(geofacet)
+library(ggplot2)
+data("state_unemp", package = "geofacet")
+p2 = ggplot(state_unemp, aes(year, rate)) +
+        geom_line() +
+        facet_geo(~state, grid = "us_state_grid2", label = "name") +
+        scale_x_continuous(labels = function(x) paste0("'", substr(x, 3, 4))) +
+        labs(title = "Seasonally Adjusted US Unemployment Rate 2000-2016",
+             caption = "Data Source: bls.gov",
+             x = "Year",
+             y = "Unemployment Rate (%)") +
+        theme(strip.text.x = element_text(size = 2)) + 
+        theme_bw()
+ggsave(p2, file="figs/02_state_unemp.png", 
+       width = 70, height = 60, units = "mm", scale = 4)        
+```
+
+---
+### Static visualization (III)
+
+&lt;img src="figs/03_ohio_linemap.png" width="600px" style="display: block; margin: auto;" /&gt;
+
+---
+### Static visualization (III)
+https://github.com/rCarto/linemap
+
+
+```r
+library(sf)
+library(tidycensus)
+library(linemap)
+# A key can be acquired at http://api.census.gov/data/key_signup.html
+# census_api_key("your key")
+oh_pop = get_acs(geography = "tract", variables = "B01003_001E", 
+                  state = "OH", geometry = TRUE) 
+plot(oh_pop$geometry)
+oh_pop
+oh_pop2 = st_transform(oh_pop, 26917)
+
+oh_pop2_grid = getgrid(x = oh_pop2, cellsize = 2500, var = "estimate")
+
+png("figs/03_ohio_linemap.png", width = 650, height = 600)
+opar = par(mar = c(0,0,0,0))
+plot(st_geometry(oh_pop2), col="lightsteelblue3", border = NA, bg = "lightsteelblue1")
+linemap(x = oh_pop2_grid, var = "estimate", k = 3, threshold = 1,
+        col = "lightsteelblue3", border = "white", lwd = 0.8,
+        add = TRUE)
+par(opar)
+dev.off()
+```
+
+---
+### Animation
+
+&lt;img src="figs/04_anim.gif" width="550px" style="display: block; margin: auto;" /&gt;
+---
+### Animation
+
+&lt;!-- https://github.com/mtennekes/tmap/issues/142 --&gt;
+
+
+```r
+library(gapminder)
+library(tidyverse)
+library(sf)
+library(tmap)
+library(spData)
+europe_area = st_polygon(list(rbind(c(-13, 34), c(-13, 72),
+                                    c(43, 72), c(43, 34), c(-13, 34)))) %&gt;% 
+        st_sfc(crs = st_crs(world)) 
+europe = st_intersection(world, europe_area) 
+europe_gdp = europe %&gt;% 
+        inner_join(gapminder, by = c("name_long" = "country"))
+m1 = tm_shape(europe) + 
+        tm_fill("grey") + 
+     tm_shape(europe_gdp) + 
+        tm_fill("gdpPercap.y", title = "GDP per capita: ") +
+        tm_borders() + 
+        tm_facets(by = "year", nrow = 1, ncol = 1, drop.units = TRUE) + 
+        tm_legend(text.size = 1, title.size = 1.2, 
+                  position = c("left", "TOP"), height = 0.3)
+
+animation_tmap(m1, filename = "figs/04_anim.gif", width = 650, height = 600)
+```
+
+
+
+---
+### Interactive visualization
+
+&lt;iframe src="05_leaflet.html" height="500" width="700"&gt;&lt;/iframe&gt; 
+
+---
+### Interactive visualization
+
+&lt;!-- https://rstudio.github.io/leaflet/ --&gt;
+
+
+```r
+library(tigris)
+library(leaflet)
+library(sf)
+library(tidyverse)
+library(osmdata)
+library(widgetframe)
+oh = counties(state="OH")
+hamilton = oh %&gt;% 
+        st_as_sf() %&gt;% 
+        filter(NAME == "Hamilton") %&gt;% 
+        st_transform(4326)
+pubs = opq(bbox = "Cincinnati OH") %&gt;% 
+  add_osm_feature(key = "amenity", value = "pub") %&gt;% 
+  osmdata_sf()
+l1 = leaflet(hamilton) %&gt;%
+        addTiles(group = "OSM") %&gt;%
+        addProviderTiles(providers$Stamen.Watercolor, group = "Watercolor") %&gt;% 
+        addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %&gt;% 
+        addLayersControl(    baseGroups = c("OSM", "Watercolor", "Toner Lite")) %&gt;% 
+        addPolygons() %&gt;% 
+        addMarkers(data = pubs$osm_points, popup=~as.character(name))
+saveWidget(l1, file = "05_leaflet.html", selfcontained = FALSE)
+```
+
+---
+### Remote sensing calculations
+
+&lt;img src="figs/06_ndvi.png" width="700px" style="display: block; margin: auto;" /&gt;
+
+---
+### Remote sensing calculations
+
+
+```r
+library(raster)
+# download_landsat8 = function(destination_filename, band){
+#         filename = paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
+#         download.file(filename, destination_filename, method='auto')
+# }
+# download_landsat8("data/landsat_b4.tif", band = 4)
+# download_landsat8("data/landsat_b5.tif", band = 5)
+b4 = raster("data/landsat_b4.tif")
+b5 = raster("data/landsat_b5.tif")
+
+ndvi_calc = function(b4, b5){
+        ndvi = (b5 - b4)/(b5 + b4)
+        ndvi
+}
+
+my_ndvi = overlay(b4, b5, fun = ndvi_calc)
+
+png("figs/06_ndvi.png", width = 650, height = 500)
+par(mfrow=c(1,2))
+plot(my_ndvi, main = "NDVI")
+hist(my_ndvi, main = "", xlab = "NDVI")
+dev.off()
+```
+
+---
+### Terrain calculations
+
+&lt;img src="figs/07_terrain.png" width="650px" style="display: block; margin: auto;" /&gt;
+
+---
+### Terrain calculations
+
+
+```r
+library(raster)
+# getData('SRTM', lon = 5, lat = 45, path = "data")
+srtm = raster("data/srtm_38_04.tif")
+my_area = extent(c(8, 10, 41.3, 43.1))
+my_srtm = crop(srtm, my_area)
+plot(my_srtm)
+
+library(mapview)
+mapView(my_srtm)
+
+my_terrain = terrain(my_srtm, opt = c("slope", "aspect", "tpi", "tri", "roughness", "flowdir"))
+
+png("figs/07_terrain.png", width = 650, height = 500)
+plot(my_terrain)
+dev.off()
+```
+
+---
+### Geocoding
+
+What's the coordinates of New York, Los Angeles, Chicago, Houston, and Philadelphia?
+
+&lt;iframe src="08_geocoding.html" height="450" width="700"&gt;&lt;/iframe&gt; 
+
+---
+### Geocoding
+
+
+```r
+# http://happygitwithr.com/api-tokens.html
+library(opencage)
+library(tidyverse)
+library(sf)
+library(mapview)
+library(htmlwidgets)
+
+my_places = c("New York", "Los Angeles", "Chicago",
+              "Houston", "Philadelphia")
+
+output = my_places %&gt;%
+        map(opencage_forward, limit = 1) %&gt;% 
+        map_df(1)
+
+output_sf = st_as_sf(output, 
+                     coords = c("geometry.lng", "geometry.lat"), crs = 4326)
+plot(output_sf$geometry, axes = TRUE)
+
+m1 = mapview(output_sf)
+mapshot(m1, "08_geocoding.html")
+```
+
+---
+class: center, middle
+# Part V - The end
+
+---
+
+![](figs/geocompr.png)
+
+The online version of the book is at http://robinlovelace.net/geocompr/ and its source code at https://github.com/robinlovelace/geocompr.
+
+We encourage contributions on any part of the book, including:
+
+- Improvements to the text, e.g. clarifying unclear sentences, fixing typos (see guidance from [Yihui Xie](https://yihui.name/en/2013/06/fix-typo-in-documentation/))
+- Changes to the code, e.g. to do things in a more efficient way
+- Suggestions on content (see the projects [issue tracker](https://github.com/Robinlovelace/geocompr/issues) and the [work-in-progress](https://github.com/Robinlovelace/geocompr/tree/master/work-in-progress) folder for chapters in the pipeline)
+
+Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/our_style.md) for the books style.
+
+---
+### References
+
+- Lovelace Robin, Nowosad Jakub, Meunchow Jannes. 2018. Geocomputation with R. CRC Press.
+- Pebesma, Edzer. 2017. Sf: Simple Features for R. https://github.com/r-spatial/sf/.
+- Pebesma, Edzer, and Roger Bivand. 2017. Sp: Classes and Methods for Spatial Data. https://CRAN.R-project.org/package=sp.
+- Hijmans, Robert J.. 2016b. Raster: Geographic Data Analysis and Modeling. https://CRAN.R-project.org/package=raster.
+- Hadley Wickham (2017). tidyverse: Easily Install and Load 'Tidyverse' Packages. R package version 1.1.1.
+  https://CRAN.R-project.org/package=tidyverse
+  
+---
+### References
+
+- Ryan Hafen. 2017. geofacet: 'ggplot2' Faceting Utilities for Geographical Data. R package version 0.1.5. https://CRAN.R-project.org/package=geofacet
+- Oscar Perpinan Lamigueiro and Robert Hijmans. 2016, rasterVis. R package version 0.41. 
+- Tennekes, Martijn. 2017. Tmap: Thematic Maps. https://CRAN.R-project.org/package=tmap.
+- Cheng, Joe, Bhaskar Karambelkar, and Yihui Xie. 2017. Leaflet: Create Interactive Web Maps with the JavaScript ’Leaflet’ Library. https://CRAN.R-project.org/package=leaflet.
+- Appelhans, Tim, Florian Detsch, Christoph Reudenbach, and Stefan Woellauer. 2017. Mapview: Interactive Viewing of Spatial Objects in R. https://CRAN.R-project.org/package=mapview.
+- Timothée Giraud. 2017. linemap: Line Maps. R package version 0.1.0.
+- Bhaskar Karambelkar. 2017. widgetframe: 'Htmlwidgets' in Responsive 'iframes'. R package version 0.3.0.
+  https://CRAN.R-project.org/package=widgetframe
+
+---
+### References
+
+- Kyle Walker. 2017. tidycensus: Load US Census Boundary and Attribute Data as 'tidyverse' and 'sf'-Ready Data Frames. R package
+  version 0.3. https://CRAN.R-project.org/package=tidycensus
+- Roger Bivand, Jakub Nowosad and Robin Lovelace. 2017. spData: Datasets for Spatial Analysis. R package version 0.2.6.0.
+  https://github.com/Nowosad/spData  
+- Jennifer Bryan. 2015. gapminder: Data from Gapminder. R package version 0.2.0. https://CRAN.R-project.org/package=gapminder
+- Kyle Walker. 2017. tigris: Load Census TIGER/Line Shapefiles into R. R package version 0.5.5. https://github.com/walkerke/tigris
+- Mark Padgham, Bob Rudis, Robin Lovelace and Maëlle Salmon. 2017. osmdata: Import 'OpenStreetMap' Data as Simple Features or Spatial
+  Objects. R package version 0.0.5. https://CRAN.R-project.org/package=osmdata
+- Maëlle Salmon. 2017. opencage: Interface to the OpenCage API. R package version 0.1.2. https://CRAN.R-project.org/package=opencage
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
