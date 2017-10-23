@@ -15,20 +15,29 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-class: center, middle
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(fig.align = "center", warning = FALSE, message = FALSE)
 ```
 
-<!-- In preparation for the course you should: -->
+### Prerequisites
 
-<!--     Ensure that you have the latest versions of R and RStudio installed on your laptop: https://www.rstudio.com/products/rstudio/download/ -->
-<!--     Brush up on your R skills if you"re not an R user, e.g. with: -->
-<!--         This excellent tutorial that you can work through to get used to the interface: https://www.datacamp.com/courses/free-introduction-to-r -->
-<!--         A more detailed account by Gillespie and Lovelace (2017): https://csgillespie.github.io/efficientR/set-up.html#rstudio -->
-<!--     Take a look at how GitHub works - we"ll be using it for sharing course materials and sharing links and examples during the course, e.g. by reading this page (and following the tutorial if really keen): https://guides.github.com/activities/hello-world/ -->
+- The latest versions of [R](https://cloud.r-project.org/) and [RStudio](https://www.rstudio.com/)
+- Installed a set of packages by running the below code in R:
+
+```{r, eval=FALSE}
+install.packages(c("raster", "sf", "rasterVis", "tmap", "leaflet",
+                   "widgetframe", "tidyverse", "spData", "geofacet",
+                   "tidycensus", "linemap", "gapminder", "tigris", 
+                   "osmdata", "mapview", "opencage"))
+```
+
+Note: `tidycensus` and `opencage` require API keys. More info [here](https://walkerke.github.io/tidycensus/articles/basic-usage.html) and [here](https://github.com/ropensci/opencage). 
+<!-- http://happygitwithr.com/api-tokens.html -->
+
+---
+class: center, middle
 
 # Part I - Examples
 
@@ -91,9 +100,6 @@ class: center, middle
 # Part II - An intro to R
 
 ---
-### What's R
-
----
 ### How to get R
 
 - https://www.r-project.org/
@@ -117,12 +123,7 @@ class: center, middle
 
 ```{r, eval=FALSE}
 # if you know a function name
-?mean
-```
-
-```{r, eval=FALSE}
-# if you know what you want to do
-??"anova"
+?crop
 ```
 
 - You can also look for help using the help window or **F1** key
@@ -136,7 +137,17 @@ class: center, middle
 ---
 ### How to start with R?
 
-https://www.computerworld.com/article/2497143/business-intelligence/business-intelligence-beginner-s-guide-to-r-introduction.html
+- [Intro to R](https://github.com/Nowosad/Intro_to_R)
+- [Beginner's guide to R: Introduction](https://www.computerworld.com/article/2497143/business-intelligence/business-intelligence-beginner-s-guide-to-r-introduction.html)
+- [R for cats](https://rforcats.net/)
+- [Introducing R to a non-programmer in one hour](http://alyssafrazee.com/introducing-R.html)
+- [DataCamp: Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r)
+- [try R](http://tryr.codeschool.com/)
+- [R news and tutorials contributed by R bloggers](https://www.r-bloggers.com/)
+- [RStudio Cheat Sheets](https://www.rstudio.com/resources/cheatsheets/)
+- [R for Data Science](http://r4ds.had.co.nz/)
+- [Efficient R programming](https://csgillespie.github.io/efficientR/)
+- [60+ R resources to improve your data skills](http://www.computerworld.com/article/2497464/business-intelligence/business-intelligence-60-r-resources-to-improve-your-data-skills.html)
 
 ---
 ### R packages
@@ -145,14 +156,14 @@ https://www.computerworld.com/article/2497143/business-intelligence/business-int
 - `install.packages()` can be used to install packages from CRAN:
 
 ```{r, eval=FALSE}
-install.packages('raster')
+install.packages("raster")
 ```
 
 - To use a package, load it with function `library()`
 - Unlike `install.packages()`, you need to load selected packages everytime you run R!
 
 ```{r}
-library('raster')
+library(raster)
 ```
 
 ---
@@ -163,7 +174,7 @@ class: center, middle
 ### Spatial R 
 
 ```{r gdsl, echo=FALSE, message=FALSE, results="asis"}
-d = readr::read_csv("data/gis-vs-gds-table.csv")
+d = readr::read_csv("figs/gis-vs-gds-table.csv")
 knitr::kable(x = d, caption = "Differences in emphasis between the fields of Geographic Information Systems (GIS) and Geographic Data Science (GDS)", format = "html")
 ```
 
@@ -171,18 +182,6 @@ knitr::kable(x = d, caption = "Differences in emphasis between the fields of Geo
 - **raster** is an extension of spatial data classes to work with rasters
 - There are many ways to vizualize spatial data in R, such as the **ggplot2**, **rasterVis**, **tmap**, **leaflet**, and **mapview** packages
 - It is easy to connect R with a GIS software - GRASS GIS (**rgrass7**), SAGA (**RSAGA**), QGIS (**RQGIS** and **qgisremote**), and ArcGIS (**arcgisbinding**)
-
-<!-- --- -->
-<!-- ### Spatial operations -->
-
-<!-- It"s a big topic which includes: -->
-
-<!-- Spatial subsetting -->
-<!-- Spatial joining/aggregation -->
-<!-- Topological relations -->
-<!-- Distances -->
-<!-- Spatial geometry modification -->
-<!-- Raster operations (map algebra) -->
 
 ---
 ### The **sf** package
@@ -207,7 +206,7 @@ install.packages("sf") # stable version
 You need a recent version of the GDAL, GEOS, Proj.4, and UDUNITS libraries installed for this to work on Mac and Linux. More information on that at https://github.com/edzer/sfr.
 
 ```{r, message=FALSE}
-library("sf")
+library(sf)
 ```
 
 ---
@@ -265,7 +264,7 @@ wrld[1:5, 1:3]
 - It is easy to use the **dplyr** package on `sf` objects:
 
 ```{r, message=FALSE}
-library("dplyr")
+library(dplyr)
 ```
 
 - `filter()`:
@@ -343,7 +342,7 @@ st_crs(wrld_3857)
 ```{r,echo=FALSE, eval=TRUE, include=FALSE}
 png("figs/coord_compare.png", width = 800, height = 500)
 par(mfrow = c(1, 2), mar=c(0,0,0,0))
-plot(wrld[0], main = "WGS 84");plot(wrld_3857[0], main = "Web Mercator")
+plot(wrld[0]);plot(wrld_3857[0])
 dev.off()
 ```
 
@@ -352,7 +351,26 @@ dev.off()
 ---
 ### Spatial operations
 
-<!-- http://robinlovelace.net/geocompr/spatial-data-operations.html#spatial-operations-on-vector-data -->
+- Spatial subsetting
+- Spatial joining/aggregation
+- Topological relations
+- Distances
+- Spatial geometry modification
+
+```{r, eval=FALSE}
+continents = wrld %>% 
+        st_set_precision(1000) %>% 
+        st_union()
+plot(continents)
+```
+
+```{r, fig.height=3, fig.width=6, echo=FALSE}
+continents = wrld %>% 
+        st_set_precision(1000) %>% 
+        st_union()
+par(mar = c(0, 0, 0, 0))
+plot(continents)
+```
 
 ---
 ### The **raster** package
@@ -374,7 +392,7 @@ This package has three object classes:
 - `RasterBrick` - for multi-layer objects linked to a single file
 
 ```{r, message=FALSE}
-library("raster")
+library(raster)
 ```
 ---
 ### Reading
@@ -577,7 +595,7 @@ plot(dem)
 - http://www.colorbrewer.org
 
 ```{r, message=FALSE, fig.align="center", fig.height=4}
-library("rasterVis")
+library(rasterVis)
 my_theme = rasterTheme(region=brewer.pal("RdYlGn", n = 9))
 p = levelplot(dem_crop, margin = FALSE, par.settings = my_theme)
 p = p + layer(sp.lines(ham_sp, lwd = 3, col = "darkgrey"))
@@ -590,7 +608,7 @@ p + layer(sp.points(ham_cities_sp, pch = 19, col = "black"))
 - https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html
 
 ```{r, fig.align="center", fig.height=4}
-library("tmap")
+library(tmap)
 tm_shape(wrld, projection="wintri") +
         tm_polygons("lifeExp", style="pretty", palette="RdYlGn",
                     auto.palette.mapping=FALSE, title=c("Life expactancy")) +
@@ -746,9 +764,10 @@ m1 = tm_shape(europe) +
         tm_legend(text.size = 1, title.size = 1.2, 
                   position = c("left", "TOP"), height = 0.3)
 
-animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
+animation_tmap(m1, filename = "figs/04_anim.gif", width = 650, height = 600)
+```
 
-## or
+```{r, eval=FALSE, echo=FALSE}
 world_gdp = world %>% 
         left_join(gapminder, by = c("name_long" = "country"))
 
@@ -780,7 +799,7 @@ animation_tmap(m1, filename = "figs/anim.gif", width = 650, height = 600)
 library(tigris)
 library(leaflet)
 library(sf)
-library(dplyr)
+library(tidyverse)
 library(osmdata)
 library(widgetframe)
 oh = counties(state="OH")
@@ -813,11 +832,10 @@ knitr::include_graphics("figs/06_ndvi.png")
 
 ```{r, eval=FALSE}
 library(raster)
-download_landsat8 = function(destination_filename, band){
-        filename = paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
-        download.file(filename, destination_filename, method='auto')
-        return(destination_filename)
-}
+# download_landsat8 = function(destination_filename, band){
+#         filename = paste0("http://landsat-pds.s3.amazonaws.com/L8/038/034/LC80380342015230LGN00/LC80380342015230LGN00_B", band, ".TIF")
+#         download.file(filename, destination_filename, method='auto')
+# }
 # download_landsat8("data/landsat_b4.tif", band = 4)
 # download_landsat8("data/landsat_b5.tif", band = 5)
 b4 = raster("data/landsat_b4.tif")
@@ -853,7 +871,6 @@ library(raster)
 srtm = raster("data/srtm_38_04.tif")
 my_area = extent(c(8, 10, 41.3, 43.1))
 my_srtm = crop(srtm, my_area)
-
 plot(my_srtm)
 
 library(mapview)
@@ -924,14 +941,30 @@ Please see [our_style.md](https://github.com/Robinlovelace/geocompr/blob/master/
 - Pebesma, Edzer. 2017. Sf: Simple Features for R. https://github.com/r-spatial/sf/.
 - Pebesma, Edzer, and Roger Bivand. 2017. Sp: Classes and Methods for Spatial Data. https://CRAN.R-project.org/package=sp.
 - Hijmans, Robert J.. 2016b. Raster: Geographic Data Analysis and Modeling. https://CRAN.R-project.org/package=raster.
+- Hadley Wickham (2017). tidyverse: Easily Install and Load 'Tidyverse' Packages. R package version 1.1.1.
+  https://CRAN.R-project.org/package=tidyverse
+  
+---
+### References
+
+- Ryan Hafen. 2017. geofacet: 'ggplot2' Faceting Utilities for Geographical Data. R package version 0.1.5. https://CRAN.R-project.org/package=geofacet
+- Oscar Perpinan Lamigueiro and Robert Hijmans. 2016, rasterVis. R package version 0.41. 
+- Tennekes, Martijn. 2017. Tmap: Thematic Maps. https://CRAN.R-project.org/package=tmap.
+- Cheng, Joe, Bhaskar Karambelkar, and Yihui Xie. 2017. Leaflet: Create Interactive Web Maps with the JavaScript ’Leaflet’ Library. https://CRAN.R-project.org/package=leaflet.
+- Appelhans, Tim, Florian Detsch, Christoph Reudenbach, and Stefan Woellauer. 2017. Mapview: Interactive Viewing of Spatial Objects in R. https://CRAN.R-project.org/package=mapview.
+- Timothée Giraud. 2017. linemap: Line Maps. R package version 0.1.0.
+- Bhaskar Karambelkar. 2017. widgetframe: 'Htmlwidgets' in Responsive 'iframes'. R package version 0.3.0.
+  https://CRAN.R-project.org/package=widgetframe
 
 ---
 ### References
 
-- H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
-- Ryan Hafen (2017). geofacet: 'ggplot2' Faceting Utilities for Geographical Data. R package version 0.1.5. https://CRAN.R-project.org/package=geofacet
-- Oscar Perpinan Lamigueiro and Robert Hijmans (2016), rasterVis. R package version 0.41. 
-- Tennekes, Martijn. 2017. Tmap: Thematic Maps. https://CRAN.R-project.org/package=tmap.
-- Cheng, Joe, Bhaskar Karambelkar, and Yihui Xie. 2017. Leaflet: Create Interactive Web Maps with the JavaScript ’Leaflet’ Library. https://CRAN.R-project.org/package=leaflet.
-- Appelhans, Tim, Florian Detsch, Christoph Reudenbach, and Stefan Woellauer. 2017. Mapview: Interactive Viewing of Spatial Objects in R. https://CRAN.R-project.org/package=mapview.
--  Hadley Wickham, Romain Francois, Lionel Henry and Kirill Müller (2017). dplyr: A Grammar of Data Manipulation. R package version 0.7.4. https://CRAN.R-project.org/package=dplyr
+- Kyle Walker. 2017. tidycensus: Load US Census Boundary and Attribute Data as 'tidyverse' and 'sf'-Ready Data Frames. R package
+  version 0.3. https://CRAN.R-project.org/package=tidycensus
+- Roger Bivand, Jakub Nowosad and Robin Lovelace. 2017. spData: Datasets for Spatial Analysis. R package version 0.2.6.0.
+  https://github.com/Nowosad/spData  
+- Jennifer Bryan. 2015. gapminder: Data from Gapminder. R package version 0.2.0. https://CRAN.R-project.org/package=gapminder
+- Kyle Walker. 2017. tigris: Load Census TIGER/Line Shapefiles into R. R package version 0.5.5. https://github.com/walkerke/tigris
+- Mark Padgham, Bob Rudis, Robin Lovelace and Maëlle Salmon. 2017. osmdata: Import 'OpenStreetMap' Data as Simple Features or Spatial
+  Objects. R package version 0.0.5. https://CRAN.R-project.org/package=osmdata
+- Maëlle Salmon. 2017. opencage: Interface to the OpenCage API. R package version 0.1.2. https://CRAN.R-project.org/package=opencage
