@@ -603,7 +603,7 @@ tm_shape(wrld, projection="wintri") +
 ```{r, eval=FALSE}
 library(leaflet)
 leaflet(ham_sp) %>%
-        addProviderTiles(providers$Stamen.Watercolor) %>% 
+        addTiles() %>% 
         addPolygons() %>% 
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 ```
@@ -612,7 +612,7 @@ leaflet(ham_sp) %>%
 library(widgetframe)
 library(leaflet)
 l = leaflet(ham_sp) %>%
-        addProviderTiles(providers$Stamen.Watercolor) %>% 
+        addTiles() %>% 
         addPolygons() %>% 
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 frameWidget(l, height = "400")
@@ -832,8 +832,8 @@ my_ndvi = overlay(b4, b5, fun = ndvi_calc)
 
 png("figs/06_ndvi.png", width = 650, height = 500)
 par(mfrow=c(1,2))
-plot(my_ndvi)
-hist(my_ndvi)
+plot(my_ndvi, main = "NDVI")
+hist(my_ndvi, main = "", xlab = "NDVI")
 dev.off()
 ```
 
