@@ -1,7 +1,7 @@
 ---
 title: "GIS with R <br/> how to start?"
 subtitle: "`r emojifont::emoji('world_map')`"
-author: "Jakub Nowosad"
+author: "Jakub Nowosad <br/> (https://nowosad.github.io)"
 date: "GIS Learning Community, Cincinnati, 2017-11-01"
 output:
   xaringan::moon_reader:
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(fig.align = "center", warning = FALSE, message = FALSE)
 ### Prerequisites
 
 - The latest versions of [R](https://cloud.r-project.org/) and [RStudio](https://www.rstudio.com/)
-- Installed a set of packages by running the below code in R:
+- A set of packages installed by running the below code in R:
 
 ```{r, eval=FALSE}
 install.packages(c("raster", "sf", "rasterVis", "tmap", "leaflet",
@@ -35,6 +35,8 @@ install.packages(c("raster", "sf", "rasterVis", "tmap", "leaflet",
 
 Note: `tidycensus` and `opencage` require API keys. More info [here](https://walkerke.github.io/tidycensus/articles/basic-usage.html) and [here](https://github.com/ropensci/opencage). 
 <!-- http://happygitwithr.com/api-tokens.html -->
+
+- Datasets downloaded from [this webpage](https://github.com/Nowosad/Intro_to_spatial_analysis/blob/master/data.zip?raw=true).
 
 ---
 class: center, middle

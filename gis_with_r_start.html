@@ -3,7 +3,7 @@
   <head>
     <title>GIS with R   how to start?</title>
     <meta charset="utf-8">
-    <meta name="author" content="Jakub Nowosad" />
+    <meta name="author" content="Jakub Nowosad   (https://nowosad.github.io)" />
     <link href="libs/remark-css/example.css" rel="stylesheet" />
     <script src="libs/htmlwidgets/htmlwidgets.js"></script>
     <script src="libs/blazy/blazy.min.js"></script>
@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 
 # GIS with R <br/> how to start?
 ## 🗺
-### Jakub Nowosad
+### Jakub Nowosad <br/> (<a href="https://nowosad.github.io" class="uri">https://nowosad.github.io</a>)
 ### GIS Learning Community, Cincinnati, 2017-11-01
 
 ---
@@ -28,7 +28,7 @@ class: center, middle, inverse, title-slide
 ### Prerequisites
 
 - The latest versions of [R](https://cloud.r-project.org/) and [RStudio](https://www.rstudio.com/)
-- Installed a set of packages by running the below code in R:
+- A set of packages installed by running the below code in R:
 
 
 ```r
@@ -40,6 +40,8 @@ install.packages(c("raster", "sf", "rasterVis", "tmap", "leaflet",
 
 Note: `tidycensus` and `opencage` require API keys. More info [here](https://walkerke.github.io/tidycensus/articles/basic-usage.html) and [here](https://github.com/ropensci/opencage). 
 &lt;!-- http://happygitwithr.com/api-tokens.html --&gt;
+
+- Datasets downloaded from [this webpage](https://github.com/Nowosad/Intro_to_spatial_analysis/blob/master/data.zip?raw=true).
 
 ---
 class: center, middle
@@ -926,8 +928,8 @@ leaflet(ham_sp) %&gt;%
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 ```
 
-<div id="htmlwidget-10a3a773887e972626c0" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-10a3a773887e972626c0">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-68.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-d7f962631b743c9eed52" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d7f962631b743c9eed52">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-68.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
 ---
 class: center, middle
