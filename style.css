@@ -30,7 +30,7 @@ code {
   float: right;
   width: 47%;
 }
-.pull-right ~ * {
+.pull-right {
   clear: both;
 }
 img {
