@@ -2,10 +2,6 @@
 
 Presentation at [GIS Learning Community](http://guides.libraries.uc.edu/GIS/GISLC), Cincinnati, 2017-11-01.
 
-## Slides
+## Slides, code and data
 
-- [Slides are available here](https://cdn.rawgit.com/Nowosad/Intro_to_spatial_analysis/05676e29/Intro_to_spatial_analysis.html)
-
-## Code and data
-
-- [The code and data are available here](https://raw.githubusercontent.com/Nowosad/Intro_to_spatial_analysis/master/Intro_to_spatial_analysis.R)
+- [The slides, code, and data are available here.](https://github.com/Nowosad/gis_with_r_how_to_start/archive/master.zip)
