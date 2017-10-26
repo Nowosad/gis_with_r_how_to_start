@@ -41,7 +41,7 @@ install.packages(c("raster", "sf", "rasterVis", "tmap", "leaflet",
 Note: `tidycensus` and `opencage` require API keys. More info [here](https://walkerke.github.io/tidycensus/articles/basic-usage.html) and [here](https://github.com/ropensci/opencage). 
 &lt;!-- http://happygitwithr.com/api-tokens.html --&gt;
 
-- Datasets downloaded from [this webpage](https://github.com/Nowosad/Intro_to_spatial_analysis/blob/master/data.zip?raw=true).
+- Datasets downloaded from [this webpage](https://github.com/Nowosad/gis_with_r_how_to_start/archive/master.zip).
 
 ---
 class: center, middle
@@ -923,13 +923,12 @@ tm_shape(wrld, projection="wintri") +
 ```r
 library(leaflet)
 leaflet(ham_sp) %&gt;%
-        addTiles() %&gt;% 
         addPolygons() %&gt;% 
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 ```
 
-<div id="htmlwidget-f30a33148bd0bf3de876" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f30a33148bd0bf3de876">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-68.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-cd2c37e65bbabf1049d3" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cd2c37e65bbabf1049d3">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-68.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
 ---
 class: center, middle

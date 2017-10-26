@@ -36,7 +36,7 @@ install.packages(c("raster", "sf", "rasterVis", "tmap", "leaflet",
 Note: `tidycensus` and `opencage` require API keys. More info [here](https://walkerke.github.io/tidycensus/articles/basic-usage.html) and [here](https://github.com/ropensci/opencage). 
 <!-- http://happygitwithr.com/api-tokens.html -->
 
-- Datasets downloaded from [this webpage](https://github.com/Nowosad/Intro_to_spatial_analysis/blob/master/data.zip?raw=true).
+- Datasets downloaded from [this webpage](https://github.com/Nowosad/gis_with_r_how_to_start/archive/master.zip).
 
 ---
 class: center, middle
@@ -623,7 +623,6 @@ tm_shape(wrld, projection="wintri") +
 ```{r, eval=FALSE}
 library(leaflet)
 leaflet(ham_sp) %>%
-        addTiles() %>% 
         addPolygons() %>% 
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 ```
@@ -632,7 +631,6 @@ leaflet(ham_sp) %>%
 library(widgetframe)
 library(leaflet)
 l = leaflet(ham_sp) %>%
-        addTiles() %>% 
         addPolygons() %>% 
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 frameWidget(l, height = "400")
