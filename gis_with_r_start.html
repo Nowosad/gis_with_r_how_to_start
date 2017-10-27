@@ -38,10 +38,53 @@ install.packages(c("raster", "sf", "rasterVis", "tmap", "leaflet",
                    "osmdata", "mapview", "opencage"))
 ```
 
-Note: `tidycensus` and `opencage` require API keys. More info [here](https://walkerke.github.io/tidycensus/articles/basic-usage.html) and [here](https://github.com/ropensci/opencage). 
-&lt;!-- http://happygitwithr.com/api-tokens.html --&gt;
-
 - Datasets downloaded from [this webpage](https://github.com/Nowosad/gis_with_r_how_to_start/archive/master.zip).
+
+---
+### Prerequisites
+
+Note: `tidycensus` and `opencage` require API keys.
+
+#### To get a `tidycensus` API key
+
+Go to http://api.census.gov/data/key_signup.html and complete the form there.
+Replace text YOUR API KEY GOES HERE with your census API key. 
+Execute the code below:
+
+
+```r
+library(tidycensus)
+census_api_key("YOUR API KEY GOES HERE", install = TRUE)
+```
+
+#### To get a `opencage` API key
+
+Go to https://geocoder.opencagedata.com/pricing, select the Free Trial, and complete the form there.
+Replace text YOUR API KEY GOES HERE with your opencage API key. 
+Execute the code below:
+
+
+```r
+cat("OPENCAGE_KEY=YOUR API CODE HERE", file=file.path(normalizePath("~/"), ".Renviron"), append=TRUE)
+```
+
+---
+### Prerequisites
+
+#### Check if the keys are installed
+
+Restart R/RStudio (Session -&gt; Restart R) and execute the code below:
+
+
+```r
+Sys.getenv("CENSUS_API_KEY")
+Sys.getenv("OPENCAGE_KEY")
+```
+
+You should see your keys print to screen.
+
+More info can be found [here](https://walkerke.github.io/tidycensus/articles/basic-usage.html) and [here](https://github.com/ropensci/opencage). 
+&lt;!-- http://happygitwithr.com/api-tokens.html --&gt;
 
 ---
 class: center, middle
@@ -157,7 +200,7 @@ install.packages("raster")
 ```
 
 - To use a package, load it with function `library()`
-- Unlike `install.packages()`, you need to load selected packages everytime you run R!
+- Unlike `install.packages()`, you need to load selected packages every time you run R!
 
 
 ```r
@@ -201,7 +244,7 @@ class: center, middle
 
 - **sf** and **sp** are the most important R packages to handle vector data; **sf** is a successor of **sp** but its still evolving. Moreover, many other R packages depend on the functions and classes for the **sp** package
 - **raster** is an extension of spatial data classes to work with rasters
-- There are many ways to vizualize spatial data in R, such as the **ggplot2**, **rasterVis**, **tmap**, **leaflet**, and **mapview** packages
+- There are many ways to visualize spatial data in R, such as the **ggplot2**, **rasterVis**, **tmap**, **leaflet**, and **mapview** packages
 - It is easy to connect R with a GIS software - GRASS GIS (**rgrass7**), SAGA (**RSAGA**), QGIS (**RQGIS** and **qgisremote**), and ArcGIS (**arcgisbinding**)
 
 ---
@@ -517,7 +560,7 @@ continents = wrld %&gt;%
 plot(continents)
 ```
 
-&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-35-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-38-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### The **raster** package
@@ -530,7 +573,7 @@ The **raster** package consists of method and classes for raster processing. It 
 - Visualize raster data
 - Many more...
 
-Basic **raster** operations are ilustrated at https://rpubs.com/etiennebr/visualraster.
+Basic **raster** operations are illustrated at https://rpubs.com/etiennebr/visualraster.
 
 This package has three object classes:
 
@@ -694,7 +737,7 @@ values_dem = getValues(dem)
 new_dem = dem + 50
 ```
 
-&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-48-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-51-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -703,7 +746,7 @@ new_dem = dem + 50
 new_dem2 = dem * new_dem
 ```
 
-&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-50-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-53-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -800,7 +843,7 @@ ham_sp = as(ham84, "Spatial")
 dem_crop = crop(dem, ham_sp)
 ```
 
-&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-58-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-61-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[ 
@@ -809,7 +852,7 @@ dem_crop = crop(dem, ham_sp)
 dem_mask = mask(dem_crop, ham_sp)
 ```
 
-&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-60-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-63-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -881,7 +924,7 @@ plot(wrld["pop"])
 plot(dem)
 ```
 
-&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-64-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-67-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### **rasterVis**
@@ -898,7 +941,7 @@ p = p + layer(sp.lines(ham_sp, lwd = 3, col = "darkgrey"))
 p + layer(sp.points(ham_cities_sp, pch = 19, col = "black"))
 ```
 
-&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-65-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-68-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### **tmap**
@@ -910,11 +953,11 @@ p + layer(sp.points(ham_cities_sp, pch = 19, col = "black"))
 library(tmap)
 tm_shape(wrld, projection="wintri") +
         tm_polygons("lifeExp", style="pretty", palette="RdYlGn",
-                    auto.palette.mapping=FALSE, title=c("Life expactancy")) +
+                    auto.palette.mapping=FALSE, title=c("Life expectancy")) +
         tm_style_grey()
 ```
 
-&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-66-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gis_with_r_start_files/figure-html/unnamed-chunk-69-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### **leaflet**
@@ -927,8 +970,8 @@ leaflet(ham_sp) %&gt;%
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 ```
 
-<div id="htmlwidget-cd2c37e65bbabf1049d3" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-cd2c37e65bbabf1049d3">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-68.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-e75a4324554fd299951d" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e75a4324554fd299951d">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-71.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
 ---
 class: center, middle
@@ -954,7 +997,7 @@ world_globe = sf::st_transform(world,
 
 p1 = ggplot(world_globe) +
         geom_sf(data = world_globe, aes(fill = lifeExp))  +
-        scale_fill_viridis_c(name = "Life expactancy: ") +
+        scale_fill_viridis_c(name = "Life expectancy: ") +
         theme_void()
 p1
 ggsave(p1, file="figs/01_world_globe.png", 
