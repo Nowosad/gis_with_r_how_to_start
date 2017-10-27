@@ -285,7 +285,7 @@ wrld = st_read("data/wrld.shp")
 ```
 
 ```
-## Reading layer `wrld' from data source `/home/jn/Documents/gis_with_r_start/data/wrld.shp' using driver `ESRI Shapefile'
+## Reading layer `wrld' from data source `/home/jakub/Science/misc/gis_with_r_how_to_start/data/wrld.shp' using driver `ESRI Shapefile'
 ## Simple feature collection with 177 features and 10 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
@@ -300,7 +300,7 @@ ham = st_read("data/hamilton_county.gpkg")
 ```
 
 ```
-## Reading layer `hamilton_county.gpkg' from data source `/home/jn/Documents/gis_with_r_start/data/hamilton_county.gpkg' using driver `GPKG'
+## Reading layer `hamilton_county.gpkg' from data source `/home/jakub/Science/misc/gis_with_r_how_to_start/data/hamilton_county.gpkg' using driver `GPKG'
 ## Simple feature collection with 1 feature and 17 fields
 ## geometry type:  POLYGON
 ## dimension:      XY
@@ -322,7 +322,7 @@ ham_cities_sf = st_read("data/hamiltion_cities.csv",
 
 ```
 ## options:        X_POSSIBLE_NAMES=X Y_POSSIBLE_NAMES=Y KEEP_GEOM_COLUMNS=NO 
-## Reading layer `hamiltion_cities' from data source `/home/jn/Documents/gis_with_r_start/data/hamiltion_cities.csv' using driver `CSV'
+## Reading layer `hamiltion_cities' from data source `/home/jakub/Science/misc/gis_with_r_how_to_start/data/hamiltion_cities.csv' using driver `CSV'
 ## Simple feature collection with 19 features and 2 fields
 ## geometry type:  POINT
 ## dimension:      XY
@@ -517,9 +517,14 @@ st_crs(wrld)
 ```
 
 ```
-## Coordinate Reference System:
-##   EPSG: 4326 
-##   proj4string: "+proj=longlat +datum=WGS84 +no_defs"
+## $epsg
+## [1] 4326
+## 
+## $proj4string
+## [1] "+proj=longlat +datum=WGS84 +no_defs"
+## 
+## attr(,"class")
+## [1] "crs"
 ```
 
 - The `st_transform()` can be used to transform coordinates
@@ -531,9 +536,14 @@ st_crs(wrld_3857)
 ```
 
 ```
-## Coordinate Reference System:
-##   EPSG: 3857 
-##   proj4string: "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs"
+## $epsg
+## [1] 3857
+## 
+## $proj4string
+## [1] "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs"
+## 
+## attr(,"class")
+## [1] "crs"
 ```
 
 ---
@@ -600,7 +610,7 @@ dem
 ## resolution  : 0.0008333333, 0.0008333333  (x, y)
 ## extent      : -85.00042, -84.00042, 38.79958, 39.39958  (xmin, xmax, ymin, ymax)
 ## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
-## data source : /home/jn/Documents/gis_with_r_start/data/srtm.tif 
+## data source : /home/jakub/Science/misc/gis_with_r_how_to_start/data/srtm.tif 
 ## names       : srtm 
 ## values      : 109, 323  (min, max)
 ```
@@ -649,38 +659,37 @@ writeFormats()
 ## [16,] "ELAS"      "ELAS"                                   
 ## [17,] "ENVI"      "ENVI .hdr Labelled"                     
 ## [18,] "ERS"       "ERMapper .ers Labelled"                 
-## [19,] "FITS"      "Flexible Image Transport System"        
-## [20,] "GPKG"      "GeoPackage"                             
-## [21,] "GS7BG"     "Golden Software 7 Binary Grid (.grd)"   
-## [22,] "GSBG"      "Golden Software Binary Grid (.grd)"     
-## [23,] "GTiff"     "GeoTIFF"                                
-## [24,] "GTX"       "NOAA Vertical Datum .GTX"               
-## [25,] "HDF4Image" "HDF4 Dataset"                           
-## [26,] "HFA"       "Erdas Imagine Images (.img)"            
-## [27,] "IDA"       "Image Data and Analysis"                
-## [28,] "ILWIS"     "ILWIS Raster Map"                       
-## [29,] "INGR"      "Intergraph Raster"                      
-## [30,] "ISCE"      "ISCE raster"                            
-## [31,] "ISIS2"     "USGS Astrogeology ISIS cube (Version 2)"
-## [32,] "KRO"       "KOLOR Raw"                              
-## [33,] "LAN"       "Erdas .LAN/.GIS"                        
-## [34,] "Leveller"  "Leveller heightfield"                   
-## [35,] "MBTiles"   "MBTiles"                                
-## [36,] "MRF"       "Meta Raster Format"                     
-## [37,] "netCDF"    "Network Common Data Format"             
-## [38,] "NITF"      "National Imagery Transmission Format"   
-## [39,] "NTv2"      "NTv2 Datum Grid Shift"                  
+## [19,] "GPKG"      "GeoPackage"                             
+## [20,] "GS7BG"     "Golden Software 7 Binary Grid (.grd)"   
+## [21,] "GSBG"      "Golden Software Binary Grid (.grd)"     
+## [22,] "GTiff"     "GeoTIFF"                                
+## [23,] "GTX"       "NOAA Vertical Datum .GTX"               
+## [24,] "HFA"       "Erdas Imagine Images (.img)"            
+## [25,] "IDA"       "Image Data and Analysis"                
+## [26,] "ILWIS"     "ILWIS Raster Map"                       
+## [27,] "INGR"      "Intergraph Raster"                      
+## [28,] "ISCE"      "ISCE raster"                            
+## [29,] "ISIS2"     "USGS Astrogeology ISIS cube (Version 2)"
+## [30,] "ISIS3"     "USGS Astrogeology ISIS cube (Version 3)"
+## [31,] "KRO"       "KOLOR Raw"                              
+## [32,] "LAN"       "Erdas .LAN/.GIS"                        
+## [33,] "Leveller"  "Leveller heightfield"                   
+## [34,] "MBTiles"   "MBTiles"                                
+## [35,] "MRF"       "Meta Raster Format"                     
+## [36,] "netCDF"    "Network Common Data Format"             
+## [37,] "NITF"      "National Imagery Transmission Format"   
+## [38,] "NTv2"      "NTv2 Datum Grid Shift"                  
+## [39,] "NWT_GRD"   "Northwood Numeric Grid Format .grd/.tab"
 ## [40,] "PAux"      "PCI .aux Labelled"                      
 ## [41,] "PCIDSK"    "PCIDSK Database File"                   
-## [42,] "PCRaster"  "PCRaster Raster File"                   
-## [43,] "PDF"       "Geospatial PDF"                         
-## [44,] "PNM"       "Portable Pixmap Format (netpbm)"        
-## [45,] "RMF"       "Raster Matrix Format"                   
-## [46,] "ROI_PAC"   "ROI_PAC raster"                         
-## [47,] "RST"       "Idrisi Raster A.1"                      
-## [48,] "SAGA"      "SAGA GIS Binary Grid (.sdat)"           
-## [49,] "SGI"       "SGI Image File Format 1.0"              
-## [50,] "Terragen"  "Terragen heightfield"
+## [42,] "PDF"       "Geospatial PDF"                         
+## [43,] "PNM"       "Portable Pixmap Format (netpbm)"        
+## [44,] "RMF"       "Raster Matrix Format"                   
+## [45,] "ROI_PAC"   "ROI_PAC raster"                         
+## [46,] "RST"       "Idrisi Raster A.1"                      
+## [47,] "SAGA"      "SAGA GIS Binary Grid (.sdat)"           
+## [48,] "SGI"       "SGI Image File Format 1.0"              
+## [49,] "Terragen"  "Terragen heightfield"
 ```
 
 ---
@@ -697,7 +706,7 @@ dem
 ## resolution  : 0.0008333333, 0.0008333333  (x, y)
 ## extent      : -85.00042, -84.00042, 38.79958, 39.39958  (xmin, xmax, ymin, ymax)
 ## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
-## data source : /home/jn/Documents/gis_with_r_start/data/srtm.tif 
+## data source : /home/jakub/Science/misc/gis_with_r_how_to_start/data/srtm.tif 
 ## names       : srtm 
 ## values      : 109, 323  (min, max)
 ```
@@ -970,8 +979,8 @@ leaflet(ham_sp) %&gt;%
         addMarkers(data=ham_cities_sp, popup=~as.character(name))
 ```
 
-<div id="htmlwidget-e75a4324554fd299951d" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e75a4324554fd299951d">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-71.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-7e5f633d3c2f0c8bf9c9" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7e5f633d3c2f0c8bf9c9">{"x":{"url":"gis_with_r_start_files/figure-html//widgets/widget_unnamed-chunk-71.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
 ---
 class: center, middle
